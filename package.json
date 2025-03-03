@@ -1,7 +1,7 @@
 {
   "name": "ccapdev",
   "version": "1.0.0",
-  "description": "Inside the folder called 'james' you will find\r 'landing_page.html' which is the starting point of the site",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon index.js",
