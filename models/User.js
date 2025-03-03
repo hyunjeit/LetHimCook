@@ -4,7 +4,9 @@ const bcrypt = require('bcrypt');
 const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true},
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true}
+    password: { type: String, required: true},
+    //profileImage: {type: String, required: false},
+    bio: {type: String, required: false}
 });
 
 UserSchema.pre('save', async function(next) {

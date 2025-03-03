@@ -6,7 +6,8 @@
 /* dependencies */
 const express = require('express');
 const session = require('express-session');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const fileupload = require('express-fileupload'); //... for some reason express-fileupload makes the site not load...
 
 const app = express();
 const bcrypt = require('bcrypt');
@@ -18,6 +19,11 @@ const path = require('path');
 
 // import user
 const User = require('./models/User');
+
+// limit file sizes to 50MB
+app.use(fileupload({
+    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+}));
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -65,11 +71,13 @@ const isAuthenticated = (req,res,next) => {
 /* page directing */
 app.get('/', (req, res) => {
     res.render('james/index.hbs');
+    // TODO: use res.sendfile instead
 })
 
 app.get('/login', (req, res) => {
     res.render('james/log_in_page.hbs');
     console.log(req.session.user);
+    // TODO: use res.sendfile instead
 })
 
 // main forum requires that the user is logged in
@@ -78,10 +86,19 @@ app.get('/main_forum', isAuthenticated, (req, res) => {
     res.render('nian/main_forum.hbs', {userData});
 })
 
+app.get('/profile', isAuthenticated, (req,res) => {
+    const userData = req.session.user;
+    res.render('jei/profile.hbs', {userData});
+})
+
+app.get('/edit_profile', isAuthenticated, (req,res) => {
+    const userData = req.session.user;
+    res.render('jei/edit_profile.hbs', {userData});
+})
+
 // an alternate version of the forum where the user is not authenticated
 app.get('/main_forum_unauthenticated', (req, res) => {
-    const userData = req.session.user;
-    res.render('nian/main_forum_logged_out.hbs', {userData});
+    res.render('nian/main_forum_logged_out.hbs');
 })
 
 app.get('/register', (req, res) => {
@@ -119,8 +136,13 @@ app.post('/login', async (req, res) => {
         }
 
         // Store user data in session
-        req.session.user = { name: user.username, userID: user._id };
+        req.session.user = { 
+            username: user.username, 
+            userID: user._id, 
+            //profileImage: user.profileImage,
+            bio: user.bio};
         res.cookie("sessionId", req.sessionID);
+        console.log(req.session.user);
 
         // if remembering user, set cookie max age to 30 days
         if (remember_me){
@@ -157,8 +179,73 @@ app.post('/register', async (req, res) => {
     }
 })
 
+// user bio and username edit route
+app.post('/update_profile', async (req, res) => {
+    try {
+        // inputs from the form
+        const { InputUsername, description } = req.body;
+        console.log("Inputs: " + InputUsername, description);
+
+        // the current user's username
+        const currentUserName = req.session.user.username;
+        // get the current user from the database
+        const currentUser = await User.findOne({ username : currentUserName});
+        
+        // Check if user already exists
+        const existingUser = await User.findOne({ username : InputUsername });
+        console.log("User of the same name exists: " + existingUser);
+
+        // only allow the username to change if it has not already been taken since they must be unique
+        if (!existingUser && InputUsername != "") {
+            // edit the name of the user only after checking if the name hasn't already been taken
+            const updatedUser = await User.findOneAndUpdate(
+                { _id: currentUser._id },  // Find user by ID of current user
+                { username: InputUsername }, // Update username
+                { new: true } // Return the updated user
+            );
+
+            if (updatedUser){
+                req.session.user.username = InputUsername;
+                console.log("New username:" + InputUsername);
+            }
+        }else{
+            // TODO: popup informing the user that username has already been taken
+        }
+
+        // edit bio no matter what since it has no restrictions
+        await User.findOneAndUpdate(
+            {_id: currentUser._id}, // Find user by id of current user
+            {bio: description }, // Update biography
+        )
+        req.session.user.bio = description;
+
+        // upload file with file name to match the user's id if a file has been uploaded
+        if (req.files){
+            const {profilePic} = req.files
+            console.log("abc");
+            if (profilePic){
+                profilePic.mv(path.resolve(__dirname,'public/profilePics',req.session.user.userID+".jpg",),(error) => {
+                    if (error)
+                    {
+                        console.log ("Error!")
+                    }
+                    else
+                    {
+                        console.log("Successfully changed profile picture");
+                    }
+                })
+            }
+        }
+
+        // TODO: make this a popup
+        res.send("Successfully updated profile <a href='/profile'>Back to profile</a>");
+    } catch (error) {
+        res.status(500).send("Error editing profile. " + error);
+    }
+})
+
 // logout route
-app.post('/logout', (req,res) => {
+app.get('/logout', (req,res) => {
     // Destroy the session
     req.session.destroy((err) => {
         if (err) {

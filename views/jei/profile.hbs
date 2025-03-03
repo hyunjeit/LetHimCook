@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Pots & Posts</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="../main_style.css">
+        <link rel="stylesheet" href="jei/style.css">
+        <link rel="stylesheet" href="main_style.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Julius+Sans+One&display=swap" rel="stylesheet">
@@ -21,16 +21,15 @@
         </header>
 
         <main>
-
             <div id="left" class="sidebar">
                 <div id="user">
-                    <a href="main_profile.html">
-                    <img src="../media/SweetTreatsMama.png">
-                    <p>SweetTreatsMama</p>
+                    <a href="/profile">
+                    <img src="profilePics/{{userData.userID}}.jpg">
+                    <p>{{userData.username}}</p>
                     </a>
                 </div>
                 <div id="sidebarMenu">  
-                    <a href="../nian/main_forum.html">
+                    <a href="/main_forum">
                     <div id="home" class="container">
                         <img src="../media/home.png">
                         <p>Home</p>
@@ -51,14 +50,13 @@
                 
                 <!-- PROFILE at top -->
                 <div id="profileBox">
-                    <a href="main_profile.html">
-                    <img id="bigPic" src="../media/SweetTreatsMama.png">
+                    <a href="/profile">
+                    <!-- profile picture is reached using the user ID since a user is expected to have only one profile picture-->
+                    <img id="bigPic" src="profilePics/{{userData.userID}}.jpg">
                     <div id="profileDetails">
-                        <h2>SweetTreatsMama</h2></a>
+                        <h2>{{userData.username}}</h2></a>
                         <p>
-                            🍪 Baking my way through life! <br>
-                            Sharing easy, homemade desserts that bring smiles to every bite.<br>
-                            Let’s bake together! 💕😍
+                            {{userData.bio}}
                         </p>
                     </div>
                 </div>
@@ -125,12 +123,12 @@
                 </form>
 
                 <div id="editLogMenu">
-                    <a href="edit_profile.html">
+                    <a href="/edit_profile">
                     <div class="container">
                         <img src="../media/edit-profile.png" alt="Edit Icon">
                         <p>Edit Profile</p>
                     </div></a>
-                    <a href="../james/log_in_page.html">
+                    <a href="/logout">
                     <div class="container">
                         <img src="../media/logout.png" alt="Log out Icon">
                         <p>Log out</p>
@@ -143,6 +141,6 @@
             </div>
 
         </main>
-        <script src="javascript.js"></script>
+        <script src="jei/javascript.js"></script>
     </body>
 </html>
