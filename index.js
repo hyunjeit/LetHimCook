@@ -19,6 +19,8 @@ const path = require('path');
 
 // import user
 const User = require('./models/User');
+const Post = require('./models/Post')
+const seedDatabase = require('./seedData');
 
 // limit file sizes to 50MB
 app.use(fileupload({
@@ -37,8 +39,9 @@ app.use(express.urlencoded({ extended: false }));
 mongoose.connect('mongodb://127.0.0.1:27017/auth_demo');
 
 // Check DB connection
-mongoose.connection.once('open', () => {
+mongoose.connection.once('open', async () => {
     console.log('Connected to MongoDB');
+    await seedDatabase();
 });
 
 // initialize session
@@ -81,10 +84,27 @@ app.get('/login', (req, res) => {
 })
 
 // main forum requires that the user is logged in
-app.get('/main_forum', isAuthenticated, (req, res) => {
-    const userData = req.session.user;
-    res.render('nian/main_forum.hbs', {userData});
-})
+app.get('/main_forum', isAuthenticated, async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const posts = await Post.find().populate('author', 'username'); // Fetch posts with author usernames
+
+        // Format posts for Handlebars
+        const formattedPosts = posts.map(post => ({
+            author: post.author.username, // Convert ObjectId reference to username
+            authorImg: `/profilePics/${post.author._id}.jpg`, // Set profile image path
+            date: post.date,
+            header: post.header,
+            content: post.content
+        }));
+
+        res.render('nian/main_forum.hbs', { userData, posts: formattedPosts });
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+        res.status(500).send("Error loading posts.");
+    }
+});
+
 
 app.get('/profile', isAuthenticated, (req,res) => {
     const userData = req.session.user;
@@ -97,8 +117,24 @@ app.get('/edit_profile', isAuthenticated, (req,res) => {
 })
 
 // an alternate version of the forum where the user is not authenticated
-app.get('/main_forum_unauthenticated', (req, res) => {
-    res.render('nian/main_forum_logged_out.hbs');
+app.get('/main_forum_unauthenticated', async (req, res) => {
+    try {
+        const posts = await Post.find().populate('author', 'username'); // Fetch posts with author usernames
+
+        // Format posts for Handlebars
+        const formattedPosts = posts.map(post => ({
+            author: post.author.username, // Convert ObjectId reference to username
+            authorImg: `/profilePics/${post.author._id}.jpg`, // Set profile image path
+            date: post.date,
+            header: post.header,
+            content: post.content
+        }));
+
+        res.render('nian/main_forum_logged_out.hbs', { posts: formattedPosts });
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+        res.status(500).send("Error loading posts.");
+    }
 })
 
 app.get('/register', (req, res) => {
@@ -276,4 +312,6 @@ app.get('/logout', (req,res) => {
     });
 })
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+  });
