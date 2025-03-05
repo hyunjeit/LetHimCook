@@ -1,0 +1,36 @@
+{
+  "name": "ccapdev",
+  "version": "1.0.0",
+  "description": "The MCO Phase 1 begins at the index.html web page.",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
+    "express-session": "^1.18.1",
+    "hbs": "^4.2.0",
+    "mongodb": "^6.13.1",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "nodemon": "^3.1.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyunjeit/LetHimCook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hyunjeit/LetHimCook/issues"
+  },
+  "homepage": "https://github.com/hyunjeit/LetHimCook#readme"
+}
