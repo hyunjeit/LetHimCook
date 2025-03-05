@@ -124,7 +124,8 @@ app.post('/login', async (req, res) => {
             if (!user){
                 // if user was not found, send to another page
                 // TODO: make this page look better, or make it a popup
-                return res.send("Invalid credentials. <a href='/login'>Try again</a>");
+                //return res.send("Invalid credentials. <a href='/login'>Try again</a>");
+                return res.redirect('/login');
             }
         }
 
@@ -132,7 +133,8 @@ app.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             // TODO: make this page look better, or make it a popup
-            return res.send("Invalid credentials. <a href='/login'>Try again</a>");
+            //return res.send("Invalid credentials. <a href='/login'>Try again</a>");
+            return res.redirect('/login');
         }
 
         // Store user data in session
@@ -163,24 +165,34 @@ app.post('/register', async (req, res) => {
         const { email, username, password } = req.body;
 
         // Check if user already exists
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            // TODO: make it nicer or make it a popup
-            return res.send("Username already taken. <a href='/register'>Try again</a>");
+        let existingUser = await User.findOne({ username });
+
+        if (!existingUser) {
+            // if user was not found, treat the username from req.body as the email instead
+            // this allows the register feature to check for either either username or email
+            existingUser = await User.findOne({username: email});
+
+            if (existingUser){
+                // if user was not found, send to another page
+                // TODO: make this page look better, or make it a popup
+                return res.send("User already exists. <a href='/register'>Try again</a>");
+            }
         }
 
         // Create and save new user with encrypted password
         const newUser = new User({ email, username, password });
         await newUser.save();
 
-        res.send("Registration successful! <a href='/login'>Login here</a>");
+        // res.send("Registration successful! <a href='/login'>Login here</a>");
+
+        res.redirect("/login");
     } catch (error) {
         res.status(500).send("Error registering user. " + error);
     }
 })
 
 // user bio and username edit route
-app.post('/update_profile', async (req, res) => {
+app.post('/update_profile', isAuthenticated, async (req, res) => {
     try {
         // inputs from the form
         const { InputUsername, description } = req.body;
@@ -193,7 +205,7 @@ app.post('/update_profile', async (req, res) => {
         
         // Check if user already exists
         const existingUser = await User.findOne({ username : InputUsername });
-        console.log("User of the same name exists: " + existingUser);
+        //console.log("User of the same name exists: " + existingUser);
 
         // only allow the username to change if it has not already been taken since they must be unique
         if (!existingUser && InputUsername != "") {
@@ -208,8 +220,11 @@ app.post('/update_profile', async (req, res) => {
                 req.session.user.username = InputUsername;
                 console.log("New username:" + InputUsername);
             }
-        }else{
-            // TODO: popup informing the user that username has already been taken
+        }else {
+            if (InputUsername != currentUserName){
+                // TODO: popup informing the user that username has already been taken
+                res.json({ message: "Entered username has already been taken" });
+            }
         }
 
         // edit bio no matter what since it has no restrictions
@@ -222,7 +237,7 @@ app.post('/update_profile', async (req, res) => {
         // upload file with file name to match the user's id if a file has been uploaded
         if (req.files){
             const {profilePic} = req.files
-            console.log("abc");
+
             if (profilePic){
                 profilePic.mv(path.resolve(__dirname,'public/profilePics',req.session.user.userID+".jpg",),(error) => {
                     if (error)
@@ -237,8 +252,9 @@ app.post('/update_profile', async (req, res) => {
             }
         }
 
-        // TODO: make this a popup
-        res.send("Successfully updated profile <a href='/profile'>Back to profile</a>");
+        // send alert message through the response object
+        // res.send("Successfully updated profile <a href='/profile'>Back to profile</a>");
+        res.redirect("/edit_profile")
     } catch (error) {
         res.status(500).send("Error editing profile. " + error);
     }
