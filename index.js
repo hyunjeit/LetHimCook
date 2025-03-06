@@ -92,10 +92,10 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
             author: post.author.username, // Convert ObjectId reference to username
-            authorImg: `/profilePics/${post.author._id}.jpg`, // Set profile image path
             date: post.date,
             header: post.header,
-            content: post.content
+            content: post.content,
+            img: post.img
         }));
 
         res.render('nian/main_forum.hbs', { userData, posts: formattedPosts });
@@ -127,7 +127,8 @@ app.get('/main_forum_unauthenticated', async (req, res) => {
             authorImg: `/profilePics/${post.author._id}.jpg`, // Set profile image path
             date: post.date,
             header: post.header,
-            content: post.content
+            content: post.content,
+            img: post.img
         }));
 
         res.render('nian/main_forum_logged_out.hbs', { posts: formattedPosts });
