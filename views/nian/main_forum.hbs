@@ -51,16 +51,21 @@
             <div id="middle">
 
                 {{#each posts}}
-                    <div class="posts">
+                    <div class="posts" id="photopost">
                         <div class="post-header">
                             <span class="post-avatar">
-                            <img src='{{this.authorImg}}' alt="author">
+                            <img src="/media/{{this.author}}.png" alt="author">
                             </span>
                             <span class="post-username"><a href="../jei/main_profile.html">{{this.author}}</a></span>
                             <span class="post-date">| {{this.date}}</span>
                         </div><a href="../lui/open_post_logged_in_1.html">
                         <div id="post_header" class="post_header">{{this.header}}</div>
-                        <div id="post_text" class="post_text">{{this.content}}</div></a>
+                        <div id="post_text" class="post_text">{{{this.content}}}</div>
+                        <div class="post_photo">
+                            {{#if this.img}}
+                                <img src="/media/{{this.img}}" alt="{{this.img}}">
+                            {{/if}}
+                        </div></a>
                         <div class="post-actions">
                             <div class="interactions">
                                 <button class="btn" id="comment4" onclick="addPopUp('comment4', 'close_comment_popUp', 'comment_popUp')">

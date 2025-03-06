@@ -10,11 +10,21 @@ const seedDatabase = async () => {
     if (existingUsers.length === 0) {
       const users = await User.insertMany([
         // Sample users
-        { username: 'SweetTreatsMama', email: 'SweetTreatsMama', password: '$2b$10$s0OG1G/9FCdA9jUtcXWSGu017mmfbOp2Hvvdm1AsvqfXWR7J/QaVG' },
-        { username: 'DadCooksDaily', email: 'DadCooksDaily', password: '$2b$10$sg3Ixbb3FpZIJXgorUPW3uju.pNCQZnpKrbfy4tPr0Hk6WEfQfQ4.' },
-        { username: 'GrillMasterMike', email: 'GrillMasterMike', password: '$2b$10$eQ5T1dP90I4pWSUv2sCs3OBxSTikrUbSz7SkhcAfzbmsGSY8NgHbW' },
-        { username: 'TheSpicySpoon', email: 'TheSpicySpoon', password: '$2b$10$vSNqMEom2VOM/wtvox4lyOxdWij2nPQIMfqv.bceqdi7WwSE/Ssnu' },
-        { username: 'ChefInTrainingEm', email: 'ChefInTrainingEm', password: '$2b$10$8E1Of0S0w/8Y0S8vk.9UNebtF.DT4KlGdHmWWgjZvE5a4xhEhfta2' },
+        { username: 'SweetTreatsMama', email: 'SweetTreatsMama', password: '$2b$10$s0OG1G/9FCdA9jUtcXWSGu017mmfbOp2Hvvdm1AsvqfXWR7J/QaVG',
+          bio: '🍪 Baking my way through life! Sharing easy, homemade desserts that bring smiles to every bite. Let’s bake together! 💕😍'
+         },
+        { username: 'DadCooksDaily', email: 'DadCooksDaily', password: '$2b$10$sg3Ixbb3FpZIJXgorUPW3uju.pNCQZnpKrbfy4tPr0Hk6WEfQfQ4.',
+          bio: 'Stay-at-home dad, home cook, and recipe sharer. 🍳👨‍🍳 Making meals with love, one dish at a time. Simple, delicious, and family-approved recipes. Let’s cook together! #DadInTheKitchen #HomeCooking'
+        },
+        { username: 'GrillMasterMike', email: 'GrillMasterMike', password: '$2b$10$eQ5T1dP90I4pWSUv2sCs3OBxSTikrUbSz7SkhcAfzbmsGSY8NgHbW',
+          bio: '🔥 BBQ, grilling, and smoked meats – bringing the backyard flavor to your feed! Meat, fire, and a little bit of patience = perfection.'
+         },
+        { username: 'TheSpicySpoon', email: 'TheSpicySpoon', password: '$2b$10$vSNqMEom2VOM/wtvox4lyOxdWij2nPQIMfqv.bceqdi7WwSE/Ssnu',
+          bio: '🌶️ Bringing the heat to your kitchen! Sharing bold, flavorful, and spice-packed recipes for those who love a little kick.'
+         },
+        { username: 'ChefInTrainingEm', email: 'ChefInTrainingEm', password: '$2b$10$8E1Of0S0w/8Y0S8vk.9UNebtF.DT4KlGdHmWWgjZvE5a4xhEhfta2',
+          bio: '👩‍🍳 16 & dreaming of becoming a chef! Trying new recipes, making mistakes, and learning along the way. Let’s cook together! #FutureChef'
+         },
       ]);
       console.log('Database seeded with initial users');
       
@@ -53,7 +63,8 @@ const seedDatabase = async () => {
                         '4️⃣ Pour in chicken broth and lemon juice. Let it simmer for 2 mins, then add chicken back in.<br>'+
                         '5️⃣ Simmer for another 5 mins until chicken is cooked through. Spoon sauce over the top & enjoy!<br><br>'+
                         'Serve with rice, mashed potatoes, or veggies. My kids love it with roasted potatoes! Let me know if you try it! 🍽️<br><br>'+
-                        '#DadCooksDaily #EasyDinners #HomeCooking #OnePanMeals'
+                        '#DadCooksDaily #EasyDinners #HomeCooking #OnePanMeals',
+            img: "garlic_butter.jpg"
           },
           { author: users[2]._id, date: 'Feb 8', header: '🥩 Smoked Brisket – Low & Slow is the Way to Go! 🔥',
             content: 'Took me years to perfect this, but once you get it right, it’s a game-changer. Here’s my foolproof brisket method:<br><br>'+
@@ -80,7 +91,8 @@ const seedDatabase = async () => {
           { author: users[4]._id, date: 'Dec 3', header: 'My First Attempt at Homemade Pasta! 🍝',
             content: 'Okay, making fresh pasta from scratch is WAY harder than I thought. 😅 My kitchen is covered in flour, my arms are sore from kneading, and somehow there’s dough on my dog?? BUT… after a few failed attempts, I finally made a plate of silky, buttery fettuccine, and I feel like a real chef! 👩‍🍳✨'
                     +'<br><br>Next time, I’ll roll it thinner (because wow, my first batch was chunky 😂), but I’m calling this a win! Anyone have pasta-making tips for a beginner? 🍝'
-                    +'<br><br>#ChefInTraining #HomemadePasta #FlourEverywhere'
+                    +'<br><br>#ChefInTraining #HomemadePasta #FlourEverywhere',
+            img: "homemade_pasta.jpg"
           }
         ]);
         console.log('Database seeded with initial posts');
