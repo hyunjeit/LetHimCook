@@ -50,8 +50,8 @@
             <div id="middle">
                 <!-- POST -->
                 <div class="post_box">
-                    <a href="../jei/main_profile.html"><div class="post_username_section">
-                        <img src="../media/{{post.author}}.png" class="post_profile_pic">
+                    <a href="/profile"><div class="post_username_section"> <!-- Link should lead to the profile of OP-->
+                        <img src="profilePics/{{post.authorID}}.jpg" class="post_profile_pic">
                         <span class="post_username">{{post.author}} | {{post.date}}</span>
                     </div></a>
                     <div id="post_header" class="post_header">{{post.header}}</div>
@@ -78,8 +78,8 @@
 
                 {{#each comments}}
                     <div class="comment_box">
-                        <a href="/open_post_logged_in?postId={{this._id}}"><div class="post_username_section"> <!-- Link should lead to the profile of the commenter-->
-                            <img src="../media/{{this.author}}.png" class="post_profile_pic">
+                        <a href="/profile"><div class="post_username_section"> <!-- Link should lead to the profile of the commenter-->
+                            <img src="profilePics/{{this.authorID}}.jpg" class="post_profile_pic">
                             <span class="post_username">{{this.author}} | {{this.date}}</span>
                         </div></a>
                         <div class="post_edit_indicator"></div>

@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
+const path = require('path');
+const fs = require('fs');
+const profilePicsFolder = path.join(__dirname, 'public/profilePics');
 
 const seedDatabase = async () => {
   try {
@@ -134,7 +137,18 @@ const seedDatabase = async () => {
           console.log('Database seeded with initial comments');
         }
       }
-  }
+      users.forEach(user => {
+        const oldPath = path.join(profilePicsFolder, `${user.username}.jpg`);
+        const newPath = path.join(profilePicsFolder, `${user._id}.jpg`);
+
+        if (fs.existsSync(oldPath)) {
+            fs.renameSync(oldPath, newPath);
+            console.log(`Renamed ${user.username}.jpg to ${user._id}.jpg`);
+        } else {
+            console.warn(`Profile picture for ${user.username} not found.`);
+        }
+    });
+    }
   } catch (error) {
     console.error('Error seeding database:', error);
   }
