@@ -19,7 +19,8 @@ const path = require('path');
 
 // import user
 const User = require('./models/User');
-const Post = require('./models/Post')
+const Post = require('./models/Post');
+const Comment = require('./models/Comment');
 const seedDatabase = require('./seedData');
 
 // limit file sizes to 50MB
@@ -91,6 +92,7 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
 
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
+            _id: post._id.toString(),
             author: post.author.username, // Convert ObjectId reference to username
             date: post.date,
             header: post.header,
@@ -102,6 +104,86 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
     } catch (error) {
         console.error("Error fetching posts:", error);
         res.status(500).send("Error loading posts.");
+    }
+});
+
+app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const postId = req.query.postId;
+
+        if (!postId) {
+            return res.status(400).send("Post ID is required.");
+        }
+
+        const post = await Post.findById(postId).populate('author', 'username');
+
+        if (!post) {
+            return res.status(404).send("Post not found.");
+        }
+
+        // Fetch comments related to this post and populate the author
+        const comments = await Comment.find({ post: postId }).populate('author', 'username');
+
+        res.render('lui/open_post_logged_in.hbs', { 
+            userData, 
+            post: {
+                _id: post._id.toString(),
+                author: post.author.username,
+                date: post.date,
+                header: post.header,
+                content: post.content,
+                img: post.img
+            },
+            comments: comments.map(comment => ({
+                author: comment.author.username,
+                date: comment.date,
+                content: comment.content
+            }))
+        });
+    } catch (error) {
+        console.error("Error fetching post:", error);
+        res.status(500).send("Error loading post.");
+    }
+});
+
+app.get('/open_post_logged_out', async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const postId = req.query.postId;
+
+        if (!postId) {
+            return res.status(400).send("Post ID is required.");
+        }
+
+        const post = await Post.findById(postId).populate('author', 'username');
+
+        if (!post) {
+            return res.status(404).send("Post not found.");
+        }
+
+        // Fetch comments related to this post and populate the author
+        const comments = await Comment.find({ post: postId }).populate('author', 'username');
+
+        res.render('lui/open_post_logged_out.hbs', { 
+            userData, 
+            post: {
+                _id: post._id.toString(),
+                author: post.author.username,
+                date: post.date,
+                header: post.header,
+                content: post.content,
+                img: post.img
+            },
+            comments: comments.map(comment => ({
+                author: comment.author.username,
+                date: comment.date,
+                content: comment.content
+            }))
+        });
+    } catch (error) {
+        console.error("Error fetching post:", error);
+        res.status(500).send("Error loading post.");
     }
 });
 
@@ -123,8 +205,8 @@ app.get('/main_forum_unauthenticated', async (req, res) => {
 
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
+            _id: post._id.toString(),
             author: post.author.username, // Convert ObjectId reference to username
-            authorImg: `/profilePics/${post.author._id}.jpg`, // Set profile image path
             date: post.date,
             header: post.header,
             content: post.content,
