@@ -54,12 +54,12 @@
                     <div class="posts" id="photopost">
                         <div class="post-header">
                             <span class="post-avatar">
-                            <img src="/media/{{this.author}}.png" alt="author">
+                            <img src="profilePics/{{this.authorID}}.jpg" alt="author">
                             </span>
                             <span class="post-username"><a href="">{{this.author}}</a></span> <!-- Username should link to respective profile -->
                             <span class="post-date">| {{this.date}}</span>
                         </div>
-                        <a href="/open_post_logged_in?postId={{this._id}}"> <!-- Clicking on the post should lead to the respective post opened thru 'open_post_logged_in.hbs' -->              
+                        <a href="/open_post_logged_in?postId={{this._id}}">          
                         <div id="post_header" class="post_header">{{this.header}}</div>
                         <div id="post_text" class="post_text">{{{this.content}}}</div>
                         <div class="post_photo">

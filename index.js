@@ -93,7 +93,8 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
             _id: post._id.toString(),
-            author: post.author.username, // Convert ObjectId reference to username
+            author: post.author.username, 
+            authorID: post.author._id.toString(), 
             date: post.date,
             header: post.header,
             content: post.content,
@@ -130,13 +131,16 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
             post: {
                 _id: post._id.toString(),
                 author: post.author.username,
+                authorID: post.author._id.toString(),
                 date: post.date,
                 header: post.header,
                 content: post.content,
                 img: post.img
             },
             comments: comments.map(comment => ({
+                _id: comment._id.toString(),
                 author: comment.author.username,
+                authorID: comment.author._id.toString(), // Pass userID for profile pic
                 date: comment.date,
                 content: comment.content
             }))
@@ -170,13 +174,16 @@ app.get('/open_post_logged_out', async (req, res) => {
             post: {
                 _id: post._id.toString(),
                 author: post.author.username,
+                authorID: post.author._id.toString(),
                 date: post.date,
                 header: post.header,
                 content: post.content,
                 img: post.img
             },
             comments: comments.map(comment => ({
+                _id: comment._id.toString(),
                 author: comment.author.username,
+                authorID: comment.author._id.toString(), // Pass userID for profile pic
                 date: comment.date,
                 content: comment.content
             }))
@@ -206,7 +213,8 @@ app.get('/main_forum_unauthenticated', async (req, res) => {
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
             _id: post._id.toString(),
-            author: post.author.username, // Convert ObjectId reference to username
+            author: post.author.username, 
+            authorID: post.author._id.toString(), 
             date: post.date,
             header: post.header,
             content: post.content,
@@ -259,7 +267,7 @@ app.post('/login', async (req, res) => {
         // Store user data in session
         req.session.user = { 
             username: user.username, 
-            userID: user._id, 
+            userID: user._id,
             //profileImage: user.profileImage,
             bio: user.bio};
         res.cookie("sessionId", req.sessionID);
