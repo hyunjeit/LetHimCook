@@ -624,6 +624,55 @@ hbs.registerHelper('highlightHashtags', function(text) {
     return text;
 });
 
+// delete posts
+app.get('/delete_post', isAuthenticated, async (req, res) => {
+    try {
+        const postId = req.query.postId;
+        const userData = req.session.user;
+
+        // Find the post and verify the author
+        const post = await Post.findById(postId);
+        if (!post || post.author.toString() !== userData.userID) {
+            return res.status(403).send("You can only delete your own posts.");
+        }
+
+        // Delete all comments related to the post
+        await Comment.deleteMany({ post: postId });
+
+        // Delete the post itself
+        await Post.findByIdAndDelete(postId);
+
+        // Redirect back to the main forum
+        res.redirect('/main_forum');
+    } catch (error) {
+        console.error("Error deleting post:", error);
+        res.status(500).send("Failed to delete post.");
+    }
+});
+
+// delete comments
+app.get('/delete_comment', isAuthenticated, async (req, res) => {
+    try {
+        const { commentId, postId } = req.query;
+        const userData = req.session.user;
+
+        // Find the comment and verify the author
+        const comment = await Comment.findById(commentId);
+        if (!comment || comment.author.toString() !== userData.userID) {
+            return res.status(403).send("You can only delete your own comments.");
+        }
+
+        // Delete the comment
+        await Comment.findByIdAndDelete(commentId);
+
+        // Redirect back to the post
+        res.redirect(`/open_post_logged_in?postId=${postId}`);
+    } catch (error) {
+        console.error("Error deleting comment:", error);
+        res.status(500).send("Failed to delete comment.");
+    }
+});
+
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
