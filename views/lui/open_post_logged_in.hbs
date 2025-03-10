@@ -75,7 +75,7 @@
                             <a href="/edit_post?postId={{post._id}}" class="btn">
                                 <img src="../media/edit-post.png" alt="Edit">
                             </a>
-                            <a href="/delete_post?postId={{post._id}}" class="btn">
+                            <a href="/delete_post?postId={{post._id}}" class="btn" onclick="return confirm('Are you sure you want to delete this post?')">
                                 <img src="../media/delete-post.png" alt="Delete">
                             </a>
                         {{/if}}
@@ -104,7 +104,7 @@
                                 <a href="/edit_comment?commentId={{this._id}}&postId={{../post._id}}">
                                     <img src="../media/edit-post.png" alt="Edit">
                                 </a>
-                                <a href="/delete_comment?commentId={{this._id}}&postId={{../post._id}}">
+                                <a href="/delete_comment?commentId={{this._id}}&postId={{../post._id}}" onclick="return confirm('Are you sure you want to delete this comment?')">
                                     <img src="../media/delete-post.png" alt="Delete">
                                 </a>
                             {{/if}}
