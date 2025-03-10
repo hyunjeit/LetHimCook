@@ -79,3 +79,15 @@
 #middle a:hover{
     color: inherit;
 }
+
+a.hashtag {
+    color: blue !important;
+    text-decoration: none !important;
+}
+a.hashtag:visited {
+    color: blue !important;
+}
+a.hashtag:hover {
+    color: blue !important;
+    text-decoration: underline !important;
+}

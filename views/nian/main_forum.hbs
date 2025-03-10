@@ -61,7 +61,7 @@
                         </div>
                         <a href="/open_post_logged_in?postId={{this._id}}">          
                         <div id="post_header" class="post_header">{{this.header}}</div>
-                        <div id="post_text" class="post_text">{{{this.content}}}</div>
+                        <div id="post_text" class="post_text">{{{highlightHashtags this.content}}}</div>
                         <div class="post_photo">
                             {{#if this.img}}
                                 <img src="/media/{{this.img}}" alt="{{this.img}}">

@@ -574,6 +574,7 @@ app.get('/logout', (req,res) => {
     });
 })
 
+//search functionality
 app.get('/main_forum_search', isAuthenticated, async (req, res) => {
     try {
         const userData = req.session.user;
@@ -610,6 +611,17 @@ app.get('/main_forum_search', isAuthenticated, async (req, res) => {
         console.error("Error fetching search results:", error);
         res.status(500).send("Error loading search results.");
     }
+});
+
+// helper for hastag
+hbs.registerHelper('highlightHashtags', function(text) {
+    if (text) {
+        // Replace hashtags (#word) with a link to the search route.
+        // The search parameter is URL-encoded. We use a simple regex here.
+        const highlighted = text.replace(/#(\w+)/g, '<a href="/main_forum_search?search=%23$1" class="hashtag">#$1</a>');
+        return new hbs.SafeString(highlighted);
+    }
+    return text;
 });
 
 
