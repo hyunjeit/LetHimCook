@@ -84,6 +84,28 @@ app.get('/login', (req, res) => {
     // TODO: use res.sendfile instead
 })
 
+// create comment
+app.post('/add_comment', isAuthenticated, async (req, res) => {
+    try {
+        const { commentContent, postId } = req.body;
+        const user = req.session.user;
+
+        // Create a new comment
+        const newComment = new Comment({
+            content: commentContent,
+            author: user.userID,
+            post: postId,
+            date: new Date()
+        });
+
+        await newComment.save();
+        res.redirect(`/open_post_logged_in?postId=${postId}`);
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        res.status(500).send("Failed to add comment.");
+    }
+});
+
 // main forum requires that the user is logged in
 app.get('/main_forum', isAuthenticated, async (req, res) => {
     try {
@@ -95,7 +117,10 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
             _id: post._id.toString(),
             author: post.author.username, 
             authorID: post.author._id.toString(), 
-            date: post.date,
+            date: new Date(post.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            }),
             header: post.header,
             content: post.content,
             img: post.img
@@ -111,14 +136,13 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
 app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
     try {
         const userData = req.session.user;
-        const postId = req.query.postId;
 
+        const postId = req.query.postId;
         if (!postId) {
             return res.status(400).send("Post ID is required.");
         }
 
         const post = await Post.findById(postId).populate('author', 'username');
-
         if (!post) {
             return res.status(404).send("Post not found.");
         }
@@ -126,13 +150,17 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
         // Fetch comments related to this post and populate the author
         const comments = await Comment.find({ post: postId }).populate('author', 'username');
 
+
         res.render('lui/open_post_logged_in.hbs', { 
             userData, 
             post: {
                 _id: post._id.toString(),
                 author: post.author.username,
                 authorID: post.author._id.toString(),
-                date: post.date,
+                date: new Date(post.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }),
                 header: post.header,
                 content: post.content,
                 img: post.img
@@ -141,7 +169,10 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
                 _id: comment._id.toString(),
                 author: comment.author.username,
                 authorID: comment.author._id.toString(), // Pass userID for profile pic
-                date: comment.date,
+                date: comment.date ? new Date(comment.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'Just now',
                 content: comment.content
             }))
         });
@@ -175,7 +206,10 @@ app.get('/open_post_logged_out', async (req, res) => {
                 _id: post._id.toString(),
                 author: post.author.username,
                 authorID: post.author._id.toString(),
-                date: post.date,
+                date: new Date(post.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }),
                 header: post.header,
                 content: post.content,
                 img: post.img
@@ -184,7 +218,10 @@ app.get('/open_post_logged_out', async (req, res) => {
                 _id: comment._id.toString(),
                 author: comment.author.username,
                 authorID: comment.author._id.toString(), // Pass userID for profile pic
-                date: comment.date,
+                date: new Date(comment.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }),
                 content: comment.content
             }))
         });
@@ -215,7 +252,10 @@ app.get('/main_forum_unauthenticated', async (req, res) => {
             _id: post._id.toString(),
             author: post.author.username, 
             authorID: post.author._id.toString(), 
-            date: post.date,
+            date: new Date(post.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            }),
             header: post.header,
             content: post.content,
             img: post.img
