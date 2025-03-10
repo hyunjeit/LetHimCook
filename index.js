@@ -389,11 +389,45 @@ app.get('/open_post_logged_out', async (req, res) => {
     }
 });
 
+app.get('/profile', isAuthenticated, async (req, res) => {
+    const loggedInUser = req.session.user;
+    const profileUserId = req.query.userId || loggedInUser.userID;
 
-app.get('/profile', isAuthenticated, (req,res) => {
-    const userData = req.session.user;
-    res.render('jei/profile.hbs', {userData});
-})
+    try {
+        const profileUser = await User.findById(profileUserId);
+        if (!profileUser) return res.status(404).send("User not found.");
+
+        // Fetch posts by the profile user
+        const posts = await Post.find({ author: profileUserId }).sort({ date: -1 });
+
+        res.render('jei/profile.hbs', {
+            userData: { 
+                userID: loggedInUser.userID.toString(),
+                username: loggedInUser.username
+            },
+            profileUser: {
+                username: profileUser.username,
+                userID: profileUser._id.toString(),  // Ensure string format
+                bio: profileUser.bio,
+                profileImage: `/profilePics/${profileUser._id}.jpg`
+            },
+            posts: posts.map(post => ({
+                _id: post._id.toString(),
+                author: profileUser.username,
+                authorID: profileUser._id.toString(),
+                date: new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                header: post.header,
+                content: post.content,
+                img: post.img
+            }))
+        });
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        res.status(500).send("Failed to load profile.");
+    }
+});
+
+
 
 app.get('/edit_profile', isAuthenticated, (req,res) => {
     const userData = req.session.user;
