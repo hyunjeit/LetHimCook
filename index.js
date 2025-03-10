@@ -78,6 +78,32 @@ const isAuthenticated = (req,res,next) => {
     }
 }
 
+// fixes date formatting of seeded posts and comments
+const fixDateField = async () => {
+    try {
+        // Fix dates for posts
+        await Post.updateMany(
+            { date: { $type: "string" } },
+            [
+                { $set: { date: { $dateFromString: { dateString: "$date" } } } }
+            ]
+        );
+
+        // Fix dates for comments
+        await Comment.updateMany(
+            { date: { $type: "string" } },
+            [
+                { $set: { date: { $dateFromString: { dateString: "$date" } } } }
+            ]
+        );
+
+        console.log("✅ Dates automatically converted to ISODate.");
+    } catch (error) {
+        console.error("❌ Failed to auto-fix dates:", error);
+    }
+};
+fixDateField();
+
 /* page directing */
 app.get('/', (req, res) => {
     res.render('james/index.hbs');
@@ -238,7 +264,7 @@ app.post('/update_comment', isAuthenticated, async (req, res) => {
 app.get('/main_forum', isAuthenticated, async (req, res) => {
     try {
         const userData = req.session.user;
-        const posts = await Post.find().populate('author', 'username'); // Fetch posts with author usernames
+        const posts = await Post.find().populate('author', 'username').sort({ date: -1, _id: 1 }); // Fetch posts with author usernames
 
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
@@ -275,7 +301,8 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
             return res.status(404).send("Post not found.");
         }
 
-        const comments = await Comment.find({ post: postId }).populate('author', 'username');
+        const comments = await Comment.find({ post: postId }).populate('author', 'username').sort({ date: -1, _id: 1 });
+
 
         res.render('lui/open_post_logged_in.hbs', { 
             userData: {
@@ -329,7 +356,7 @@ app.get('/open_post_logged_out', async (req, res) => {
         }
 
         // Fetch comments related to this post and populate the author
-        const comments = await Comment.find({ post: postId }).populate('author', 'username');
+        const comments = await Comment.find({ post: postId }).populate('author', 'username').sort({ date: -1, _id: 1 });
 
         res.render('lui/open_post_logged_out.hbs', { 
             userData, 
@@ -376,7 +403,7 @@ app.get('/edit_profile', isAuthenticated, (req,res) => {
 // an alternate version of the forum where the user is not authenticated
 app.get('/main_forum_unauthenticated', async (req, res) => {
     try {
-        const posts = await Post.find().populate('author', 'username'); // Fetch posts with author usernames
+        const posts = await Post.find().populate('author', 'username').sort({ date: -1, _id: 1 }); // Fetch posts with author usernames
 
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
@@ -586,7 +613,7 @@ app.get('/main_forum_search', isAuthenticated, async (req, res) => {
                 { header: { $regex: searchQuery, $options: 'i' } },
                 { content: { $regex: searchQuery, $options: 'i' } }
             ]
-        }).populate('author', 'username');
+        }).populate('author', 'username').sort({ date: -1, _id: 1 });
 
         // Format posts for Handlebars
         const formattedPosts = posts.map(post => ({
