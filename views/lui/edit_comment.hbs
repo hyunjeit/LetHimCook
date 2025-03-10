@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pots & Posts</title>
+        <link rel="stylesheet" href="main_style.css">
+        <link rel="stylesheet" href="lui/LUIstyle.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Julius+Sans+One&display=swap" rel="stylesheet">
+    </head>
+    <body>
+
+        <header>
+            <div id="logo_bg">
+                <img src="media/ellipse.png">
+            </div>
+            <div id="logo">
+                <img src="media/logo.png">
+            </div>
+            <div id="headerText">Pots & Posts</div>
+        </header>
+
+        <main>
+
+            <!-- LEFT SIDEBAR -->
+            <div id="left" class="sidebar">
+                <div id="user">
+                    <a href="/profile">
+                    <img src="profilePics/{{userData.userID}}.jpg">
+                    <p>{{userData.username}}</p>
+                    </a>
+                </div>
+                <div id="sidebarMenu">  
+                    <a href="/main_forum"><div id="home" class="container">
+                        <img src="../media/home.png">
+                        <p>Home</p>
+                    </div></a> 
+                    <a href="#"><div class="container">
+                        <img src="../media/settings.png">
+                        <p>Settings</p>
+                    </div></a>
+                    <a href="/make_post"><div id="post" class="container">
+                        <img src="../media/add.png">
+                        <p>Post</p>
+                    </div></a>
+                </div>
+            </div>
+
+            <!-- MIDDLE SECTION:-->
+            <div id="middle">
+                <!-- The existing edit form container -->
+                <div id="makePostSection"> 
+                    <div id="editProfileDetails">
+                        <form action="/update_comment" method="POST">
+                            <!-- Hidden inputs to pass commentId and postId -->
+                            <input type="hidden" name="commentId" value="{{comment._id}}">
+                            <input type="hidden" name="postId" value="{{postId}}">
+
+                            <!-- Textarea to edit comment content -->
+                            <textarea class="textArea" name="content" required>{{comment.content}}</textarea>
+
+                            <!-- Submit button -->
+                            <button id="postBtn" type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDEBAR -->
+            <div id="right" class="sidebar">
+                <form>
+                    <div class="search">
+                        <img src="media/search.png">
+                        <input class="search-input" type="search" placeholder="search">
+                    </div>
+                </form>
+            </div>
+
+        </main>
+
+        <script src="javascript.js"></script>
+    </body>
+</html>
