@@ -84,6 +84,11 @@ app.get('/login', (req, res) => {
     // TODO: use res.sendfile instead
 })
 
+app.get('/make_post', isAuthenticated, (req, res) => {
+    const userData = req.session.user;
+    res.render('lui/make_post.hbs', { userData });
+});
+
 // create comment
 app.post('/add_comment', isAuthenticated, async (req, res) => {
     try {
@@ -105,6 +110,43 @@ app.post('/add_comment', isAuthenticated, async (req, res) => {
         res.status(500).send("Failed to add comment.");
     }
 });
+
+// create post
+app.post('/add_post', isAuthenticated, async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const { header, content } = req.body;
+        let imageFileName = '';
+
+        // Handle image upload if an image was submitted
+        if (req.files && req.files.postImage) {
+            const postImage = req.files.postImage;
+            imageFileName = `${Date.now()}-${postImage.name}`;
+            postImage.mv(path.resolve(__dirname, 'public/media', imageFileName), (error) => {
+                if (error) {
+                    console.error("Error uploading image:", error);
+                    return res.status(500).send("Failed to upload image.");
+                }
+            });
+        }
+
+        // Create a new post
+        const newPost = new Post({
+            author: userData.userID,
+            header: header,
+            content: content,
+            img: imageFileName || null,
+            date: new Date()
+        });
+
+        await newPost.save();
+        res.redirect('/main_forum');
+    } catch (error) {
+        console.error("Error creating post:", error);
+        res.status(500).send("Failed to create post.");
+    }
+});
+
 
 // main forum requires that the user is logged in
 app.get('/main_forum', isAuthenticated, async (req, res) => {
