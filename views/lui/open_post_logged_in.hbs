@@ -50,7 +50,7 @@
             <div id="middle">
                 <!-- POST -->
                 <div class="post_box">
-                    <a href="/profile"><div class="post_username_section"> <!-- Link should lead to the profile of OP-->
+                    <a href="/profile?userId={{post.authorID}}"><div class="post_username_section">
                         <img src="profilePics/{{post.authorID}}.jpg" class="post_profile_pic">
                         <span class="post_username">{{post.author}} | {{post.date}}</span>
                     </div></a>
@@ -84,7 +84,7 @@
 
                 {{#each comments}}
                     <div class="comment_box">
-                        <a href="/profile"><div class="post_username_section"> <!-- Link should lead to the profile of the commenter-->
+                        <a href="/profile?userId={{this.authorID}}"><div class="post_username_section">
                             <img src="profilePics/{{this.authorID}}.jpg" class="post_profile_pic">
                             <span class="post_username">{{this.author}} | {{this.date}}</span>
                         </div></a>
