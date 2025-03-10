@@ -574,6 +574,45 @@ app.get('/logout', (req,res) => {
     });
 })
 
+app.get('/main_forum_search', isAuthenticated, async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const searchQuery = req.query.search || '';
+
+        // Find posts that match the search query in either header or content (case-insensitive)
+        const posts = await Post.find({
+            $or: [
+                { header: { $regex: searchQuery, $options: 'i' } },
+                { content: { $regex: searchQuery, $options: 'i' } }
+            ]
+        }).populate('author', 'username');
+
+        // Format posts for Handlebars
+        const formattedPosts = posts.map(post => ({
+            _id: post._id.toString(),
+            author: post.author.username, 
+            authorID: post.author._id.toString(), 
+            date: new Date(post.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            }),
+            header: post.header,
+            content: post.content,
+            img: post.img
+        }));
+
+        res.render('nian/main_forum_search.hbs', { 
+            userData, 
+            posts: formattedPosts, 
+            query: searchQuery 
+        });
+    } catch (error) {
+        console.error("Error fetching search results:", error);
+        res.status(500).send("Error loading search results.");
+    }
+});
+
+
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
   });

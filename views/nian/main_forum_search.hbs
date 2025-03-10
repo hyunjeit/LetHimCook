@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Pots & Posts</title>
+        <title>Pots & Posts - Search Results</title>
         <link rel="stylesheet" href="nian/style.css">
         <link rel="stylesheet" href="main_style.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,13 +21,12 @@
         </header>
 
         <main>
-
             <!-- LEFT SIDEBAR -->
             <div id="left" class="sidebar">
                 <div id="user">
                     <a href="/profile">
-                    <img src="profilePics/{{userData.userID}}.jpg">
-                    <p>{{userData.username}}</p>
+                        <img src="profilePics/{{userData.userID}}.jpg">
+                        <p>{{userData.username}}</p>
                     </a>
                 </div>
                 <div id="sidebarMenu">
@@ -46,43 +45,59 @@
                 </div>
             </div>
 
-            <!-- MIDDLE SECTION:-->
-            <!-- TODO: Fix links -->
+            <!-- MIDDLE SECTION: Displaying Search Results -->
             <div id="middle">
+                {{#if query}}
+                    <h2 style="font-family:Inter ;">Search Results for "{{query}}"</h2>
+                {{/if}}
 
                 {{#each posts}}
                     <div class="posts" id="photopost">
                         <div class="post-header">
                             <span class="post-avatar">
-                            <img src="profilePics/{{this.authorID}}.jpg" alt="author">
+                                <img src="profilePics/{{this.authorID}}.jpg" alt="author">
                             </span>
-                            <span class="post-username"><a href="">{{this.author}}</a></span> <!-- Username should link to respective profile -->
+                            <span class="post-username"><a href="">{{this.author}}</a></span>
                             <span class="post-date">| {{this.date}}</span>
                         </div>
-                        <a href="/open_post_logged_in?postId={{this._id}}">          
-                        <div id="post_header" class="post_header">{{this.header}}</div>
-                        <div id="post_text" class="post_text">{{{this.content}}}</div>
-                        <div class="post_photo">
-                            {{#if this.img}}
-                                <img src="/media/{{this.img}}" alt="{{this.img}}">
-                            {{/if}}
-                        </div></a>
+                        <a href="/open_post_logged_in?postId={{this._id}}">
+                            <div id="post_header" class="post_header">{{this.header}}</div>
+                            <div id="post_text" class="post_text">{{{this.content}}}</div>
+                            <div class="post_photo">
+                                {{#if this.img}}
+                                    <img src="/media/{{this.img}}" alt="{{this.img}}">
+                                {{/if}}
+                            </div>
+                        </a>
                         <div class="post-actions">
                             <div class="interactions">
                                 <button class="btn" id="comment4" onclick="addPopUp('comment4', 'close_comment_popUp', 'comment_popUp')">
                                     <img src="../media/comment.png" alt="Comment">
                                 </button>
-                                <button class="btn" onclick="liked('like-4')"><img src="../media/upvote.png" alt="Thumbs Up" id="like-4"></button>
-                                <button class="btn" onclick="disliked('dislike-4')"><img src="../media/downvote.png" alt="Thumbs Down" id="dislike-4"></button>
-                                <button class="btn"><img src="../media/share.png" alt="Share"></button>
+                                <button class="btn" onclick="liked('like-4')">
+                                    <img src="../media/upvote.png" alt="Thumbs Up" id="like-4">
+                                </button>
+                                <button class="btn" onclick="disliked('dislike-4')">
+                                    <img src="../media/downvote.png" alt="Thumbs Down" id="dislike-4">
+                                </button>
+                                <button class="btn">
+                                    <img src="../media/share.png" alt="Share">
+                                </button>
                             </div>
                         </div>
                     </div>
                 {{/each}}
 
+                {{#unless posts.length}}
+                    <p>No posts found matching your search.</p>
+                {{/unless}}
+
+                <!-- Optional: Comment Modal (if needed) -->
                 <div class="modal btn" id="comment_popUp">
                     <div class="modal-inner">
-                        <button id="close_comment_popUp" class="btn"><img src="../media/close.png"></button>
+                        <button id="close_comment_popUp" class="btn">
+                            <img src="../media/close.png">
+                        </button>
                         <form action="/add_comment" method="POST">
                             <textarea name="commentContent" class="textArea" placeholder="Share your thoughts..." required></textarea>
                             <input type="hidden" name="postId" value="{{post._id}}">
@@ -90,19 +105,17 @@
                         </form>
                     </div>
                 </div>
-
             </div>
 
-            <!-- RIGHT SIDEBAR -->
+            <!-- RIGHT SIDEBAR: Search Form -->
             <div id="right" class="sidebar">
                 <form action="/main_forum_search" method="GET">
                     <div class="search">
                         <img src="../media/search.png">
-                        <input class="search-input" type="search" name="search" placeholder="search">
+                        <input class="search-input" type="search" name="search" placeholder="search" value="{{query}}">
                     </div>
                 </form>
             </div>
-
         </main>
         <script src="lui/javascript.js"></script>
     </body>
