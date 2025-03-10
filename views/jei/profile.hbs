@@ -3,6 +3,7 @@
     <head>
         <title>Pots & Posts</title>
         <link rel="stylesheet" href="jei/style.css">
+        <link rel="stylesheet" href="nian/style.css">
         <link rel="stylesheet" href="main_style.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,10 +39,11 @@
                         <img src="../media/settings.png">
                         <p>Settings</p>
                     </div>
-                    <div id="post" class="container">
-                        <img src="../media/add.png">
+                    <a href="/make_post">
+                        <div id="post" class="container">
+                            <img src="../media/add.png">
                         <p>Post</p>
-                    </div>
+                    </div></a>
                 </div>
             </div>
 
@@ -61,7 +63,37 @@
                     </div>
                 </div>
 
-                <!-- FIRST POST -->
+                {{#each posts}}
+                    <div class="posts" id="photopost">
+                        <div class="post-header">
+                            <span class="post-avatar">
+                            <img src="profilePics/{{this.authorID}}.jpg" alt="author">
+                            </span>
+                            <span class="post-username"><a href="">{{this.author}}</a></span> <!-- Username should link to respective profile -->
+                            <span class="post-date">| {{this.date}}</span>
+                        </div>
+                        <a href="/open_post_logged_in?postId={{this._id}}">          
+                        <div id="post_header" class="post_header">{{this.header}}</div>
+                        <div id="post_text" class="post_text">{{{this.content}}}</div>
+                        <div class="post_photo">
+                            {{#if this.img}}
+                                <img src="/media/{{this.img}}" alt="{{this.img}}">
+                            {{/if}}
+                        </div></a>
+                        <div class="post-actions">
+                            <div class="interactions">
+                                <button class="btn" id="comment4" onclick="addPopUp('comment4', 'close_comment_popUp', 'comment_popUp')">
+                                    <img src="../media/comment.png" alt="Comment">
+                                </button>
+                                <button class="btn" onclick="liked('like-4')"><img src="../media/upvote.png" alt="Thumbs Up" id="like-4"></button>
+                                <button class="btn" onclick="disliked('dislike-4')"><img src="../media/downvote.png" alt="Thumbs Down" id="dislike-4"></button>
+                                <button class="btn"><img src="../media/share.png" alt="Share"></button>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+
+                <!-- FIRST POST >
                 <div id="post_box" class="post_box">
                     <div class="post_username_section">
                         <img src="../media/SweetTreatsMama.png" class="post_profile_pic">
@@ -87,7 +119,7 @@
                     </div>
                 </div>
 
-                <!-- SECOND POST -->
+                < SECOND POST >
                 <div class="post_box">
                     <div class="post_username_section">
                         <img src="../media/SweetTreatsMama.png" class="post_profile_pic">
@@ -110,7 +142,7 @@
                         <a href="../lui/edit_post_2.html" class="btn"><img src="../media/edit-post.png" alt="Edit"></a>
                         <button class="btn"><img src="../media/delete-post.png" alt="Delete"></button>
                     </div>
-                </div>
+                </div -->
 
             </div>
 

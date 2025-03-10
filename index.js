@@ -362,10 +362,34 @@ app.get('/open_post_logged_out', async (req, res) => {
     }
 });
 
+app.get('/profile', isAuthenticated, async (req,res) => {
+    try{
+        const userData = req.session.user;
 
-app.get('/profile', isAuthenticated, (req,res) => {
-    const userData = req.session.user;
-    res.render('jei/profile.hbs', {userData});
+        console.log("checking profile of user:" +JSON.stringify(userData, null, 2));
+
+        const posts = await Post.find({ author: userData.userID }).populate('author', 'username'); // Fetch posts with author usernames
+
+        // Format posts for Handlebars
+        const formattedPosts = posts.map(post => ({
+            _id: post._id.toString(),
+            author: post.author.username, 
+            authorID: post.author._id.toString(), 
+            date: new Date(post.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            }),
+            header: post.header,
+            content: post.content,
+            img: post.img
+        }));
+
+    res.render('jei/profile.hbs', {userData, posts:formattedPosts});
+    }
+    catch (error){
+        console.error("Error fetching posts of user:", error);
+        res.status(500).send("Error loading posts.");
+    }
 })
 
 app.get('/edit_profile', isAuthenticated, (req,res) => {
@@ -432,6 +456,7 @@ app.post('/login', async (req, res) => {
         if (!isMatch) {
             // TODO: make this page look better, or make it a popup
             //return res.send("Invalid credentials. <a href='/login'>Try again</a>");
+            console.log('failed to match password');
             return res.redirect('/login');
         }
 
@@ -442,7 +467,7 @@ app.post('/login', async (req, res) => {
             //profileImage: user.profileImage,
             bio: user.bio};
         res.cookie("sessionId", req.sessionID);
-        console.log(req.session.user);
+        // console.log(req.session.user);
 
         // if remembering user, set cookie max age to 30 days
         if (remember_me){
