@@ -80,6 +80,17 @@
                     </div>
                 {{/each}}
 
+                <div class="modal btn" id="comment_popUp">
+                    <div class="modal-inner">
+                        <button id="close_comment_popUp" class="btn"><img src="../media/close.png"></button>
+                        <form action="/add_comment" method="POST">
+                            <textarea name="commentContent" class="textArea" placeholder="Share your thoughts..." required></textarea>
+                            <input type="hidden" name="postId" value="{{post._id}}">
+                            <button type="submit" id="post_comment" class="btn">Comment</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
 
             <!-- RIGHT SIDEBAR -->

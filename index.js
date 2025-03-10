@@ -32,6 +32,12 @@ app.use(fileupload({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view-engine', 'hbs');
+const hbs = require('hbs');
+
+hbs.registerHelper('eq', function(a, b) {
+    return a === b;
+});
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
@@ -89,28 +95,6 @@ app.get('/make_post', isAuthenticated, (req, res) => {
     res.render('lui/make_post.hbs', { userData });
 });
 
-// create comment
-app.post('/add_comment', isAuthenticated, async (req, res) => {
-    try {
-        const { commentContent, postId } = req.body;
-        const user = req.session.user;
-
-        // Create a new comment
-        const newComment = new Comment({
-            content: commentContent,
-            author: user.userID,
-            post: postId,
-            date: new Date()
-        });
-
-        await newComment.save();
-        res.redirect(`/open_post_logged_in?postId=${postId}`);
-    } catch (error) {
-        console.error("Error adding comment:", error);
-        res.status(500).send("Failed to add comment.");
-    }
-});
-
 // create post
 app.post('/add_post', isAuthenticated, async (req, res) => {
     try {
@@ -147,6 +131,108 @@ app.post('/add_post', isAuthenticated, async (req, res) => {
     }
 });
 
+// edit post
+app.get('/edit_post', isAuthenticated, async (req, res) => {
+    try {
+        const postId = req.query.postId;
+        const userData = req.session.user;
+
+        const post = await Post.findById(postId);
+        if (!post || post.author.toString() !== userData.userID) {
+            return res.status(403).send("You can only edit your own posts.");
+        }
+
+        res.render('lui/edit_post.hbs', { post, userData });
+    } catch (error) {
+        console.error("Error loading post:", error);
+        res.status(500).send("Failed to load post.");
+    }
+});
+
+// update post
+app.post('/update_post', isAuthenticated, async (req, res) => {
+    try {
+        const { postId, header, content } = req.body;
+        const userData = req.session.user;
+
+        const post = await Post.findById(postId);
+        if (!post || post.author.toString() !== userData.userID) {
+            return res.status(403).send("You can only edit your own posts.");
+        }
+
+        // Update the post
+        post.header = header;
+        post.content = content;
+        await post.save();
+
+        res.redirect('/main_forum');
+    } catch (error) {
+        console.error("Error updating post:", error);
+        res.status(500).send("Failed to update post.");
+    }
+});
+
+// create comment
+app.post('/add_comment', isAuthenticated, async (req, res) => {
+    try {
+        const { commentContent, postId } = req.body;
+        const user = req.session.user;
+
+        // Create a new comment
+        const newComment = new Comment({
+            content: commentContent,
+            author: user.userID,
+            post: postId,
+            date: new Date()
+        });
+
+        await newComment.save();
+        res.redirect(`/open_post_logged_in?postId=${postId}`);
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        res.status(500).send("Failed to add comment.");
+    }
+});
+
+// edit comment
+app.get('/edit_comment', isAuthenticated, async (req, res) => {
+    try {
+        const { commentId, postId } = req.query;
+        const userData = req.session.user;
+
+        const comment = await Comment.findById(commentId);
+        if (!comment || comment.author.toString() !== userData.userID) {
+            return res.status(403).send("You can only edit your own comments.");
+        }
+
+        res.render('lui/edit_comment.hbs', { comment, postId, userData });
+    } catch (error) {
+        console.error("Error loading comment:", error);
+        res.status(500).send("Failed to load comment.");
+    }
+});
+
+//update comment
+app.post('/update_comment', isAuthenticated, async (req, res) => {
+    try {
+        const { commentId, content, postId } = req.body;
+        const userData = req.session.user;
+
+        const comment = await Comment.findById(commentId);
+        if (!comment || comment.author.toString() !== userData.userID) {
+            return res.status(403).send("You can only edit your own comments.");
+        }
+
+        // Update the comment
+        comment.content = content;
+        await comment.save();
+
+        res.redirect(`/open_post_logged_in?postId=${postId}`);
+    } catch (error) {
+        console.error("Error updating comment:", error);
+        res.status(500).send("Failed to update comment.");
+    }
+});
 
 // main forum requires that the user is logged in
 app.get('/main_forum', isAuthenticated, async (req, res) => {
@@ -178,8 +264,8 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
 app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
     try {
         const userData = req.session.user;
-
         const postId = req.query.postId;
+
         if (!postId) {
             return res.status(400).send("Post ID is required.");
         }
@@ -189,16 +275,17 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
             return res.status(404).send("Post not found.");
         }
 
-        // Fetch comments related to this post and populate the author
         const comments = await Comment.find({ post: postId }).populate('author', 'username');
 
-
         res.render('lui/open_post_logged_in.hbs', { 
-            userData, 
+            userData: {
+                userID: userData.userID,
+                username: userData.username
+            }, 
             post: {
                 _id: post._id.toString(),
                 author: post.author.username,
-                authorID: post.author._id.toString(),
+                authorID: post.author._id.toString(), 
                 date: new Date(post.date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric'
@@ -210,7 +297,8 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
             comments: comments.map(comment => ({
                 _id: comment._id.toString(),
                 author: comment.author.username,
-                authorID: comment.author._id.toString(), // Pass userID for profile pic
+                authorID: comment.author._id.toString(),
+                userID: userData.userID,
                 date: comment.date ? new Date(comment.date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric'
@@ -223,6 +311,7 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
         res.status(500).send("Error loading post.");
     }
 });
+
 
 app.get('/open_post_logged_out', async (req, res) => {
     try {

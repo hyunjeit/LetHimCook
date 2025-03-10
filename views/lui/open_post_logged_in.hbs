@@ -71,8 +71,14 @@
                         <button class="btn" onclick="liked('like-1')"><img src="../media/upvote.png" alt="Thumbs Up" id="like-1"></button>
                         <button class="btn" onclick="disliked('dislike-1')"><img src="../media/downvote.png" alt="Thumbs Down" id="dislike-1"></button>
                         <button class="btn"><img src="../media/share.png" alt="Share"></button>
-                        <a href="edit_post_1.html" class="btn"><img src="../media/edit-post.png" alt="Edit"></a>
-                        <button class="btn"><img src="../media/delete-post.png" alt="Delete"></button>
+                        {{#if (eq post.authorID userData.userID)}}
+                            <a href="/edit_post?postId={{post._id}}" class="btn">
+                                <img src="../media/edit-post.png" alt="Edit">
+                            </a>
+                            <a href="/delete_post?postId={{post._id}}" class="btn">
+                                <img src="../media/delete-post.png" alt="Delete">
+                            </a>
+                        {{/if}}
                     </div>
                 </div>
 
@@ -94,6 +100,14 @@
                             <button class="btn" onclick="disliked('dislike-2')"><img src="../media/downvote.png" alt="Thumbs Down" id="dislike-2"></button>
 
                             <button class="btn"><img src="../media/share.png" alt="Share"></button>
+                            {{#if (eq this.authorID ../userData.userID)}}
+                                <a href="/edit_comment?commentId={{this._id}}&postId={{../post._id}}">
+                                    <img src="../media/edit-post.png" alt="Edit">
+                                </a>
+                                <a href="/delete_comment?commentId={{this._id}}&postId={{../post._id}}">
+                                    <img src="../media/delete-post.png" alt="Delete">
+                                </a>
+                            {{/if}}
                         </div>
                     </div>
                 {{/each}}
