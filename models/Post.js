@@ -9,7 +9,8 @@ const PostSchema = new mongoose.Schema({
   },
   header: {type: String, required: true},
   content: {type: String, required: true},
-  img: {type: String, required: false}
+  img: {type: String, required: false},
+  edited: {type: Boolean, required: true}
 });
 
 module.exports = mongoose.model('Post', PostSchema);
