@@ -41,12 +41,14 @@ const seedDatabase = async () => {
             content: '1. Chilling = Less Spreading. Cold dough holds its shape better, giving you thick, chewy cookies instead of flat, sad ones 😥.<br>'+
             '2. More Flavor. Letting the dough sit allows the flavors to develop—kind of like marinating meat 🤣!<br>'+
             '3. Better Texture. The sugar has time to absorb moisture, leading to that crispy edge & soft center we all love 😍.<br><br>'+
-            'Short on time? Chill for at least 30 minutes. But if you can, overnight is the best 😚!'
+            'Short on time? Chill for at least 30 minutes. But if you can, overnight is the best 😚!',
+            edited: false
           },
           { author: users[0]._id, date: new Date('2024-10-17T00:00:00.000Z'), header: 'Too Many Cookies... Help!', 
             content: 'Okay, I may have gone a bit overboard baking this weekend. 😅 My kitchen currently looks like a dessert factory, and I’m running out of counter space.<br><br>'+
             '<b>@DadCooksDaily</b>, do your kids want some extra cookies? Because mine are on a sugar high, and I can’t handle another round of “but Mom, just one more!!” 😵‍💫<br><br>'+
-            '#BakingProblems #HelpMeEatThese #CookieOverload'
+            '#BakingProblems #HelpMeEatThese #CookieOverload',
+            edited: false
           },
           { author: users[1]._id, date: new Date('2025-01-19T00:00:00.000Z'), header: '🍗 Easy One-Pan Garlic Butter Chicken 🕺',
             content: 'Busy dads (and moms), this one\'s for you! A quick, no-fuss meal that\'s packed with flavor and ready in under 30 minutes. Perfect for those hectic evenings when the little ones are running around!<br><br>'+
@@ -68,7 +70,8 @@ const seedDatabase = async () => {
                       '5️⃣ Simmer for another 5 mins until chicken is cooked through. Spoon sauce over the top & enjoy!<br><br>'+
                       'Serve with rice, mashed potatoes, or veggies. My kids love it with roasted potatoes! Let me know if you try it! 🍽️<br><br>'+
                       '#DadCooksDaily #EasyDinners #HomeCooking #OnePanMeals',
-            img: "garlic_butter.jpg"
+            img: "garlic_butter.jpg",
+            edited: false
           },
           { author: users[2]._id, date: new Date('2025-01-08T00:00:00.000Z'), header: '🥩 Smoked Brisket – Low & Slow is the Way to Go! 🔥',
             content: 'Took me years to perfect this, but once you get it right, it’s a game-changer. Here’s my foolproof brisket method:<br><br>'+
@@ -85,18 +88,21 @@ const seedDatabase = async () => {
                       '4️⃣ Wrap in butcher paper at 165°F for that perfect bark!<br>'+
                       '5️⃣ Let it rest for at least 1 hour before slicing.<br><br>'+
                       'Patience = juicy, tender brisket. 🤠🔥<br><br>'+
-                      '#BBQLife #SmokedMeats #GrillSeason'
+                      '#BBQLife #SmokedMeats #GrillSeason',
+                      edited: false
           },
           { author: users[3]._id, date: new Date('2024-08-29T00:00:00.000Z'), header: 'I Have Made a Terrible Mistake… 🌶️🔥💀',
             content: '🚨 SEND HELP. 🚨 I just ate a whole Carolina Reaper, and I am currently reconsidering every life decision I have ever made. I thought I could handle it. I thought, "I eat spicy food all the time, I’ll be fine!" NO. I WAS NOT FINE.'
                           +'<br><br>Currently debating whether to chug a bottle of ranch dressing or just jump into a pool and hope for the best. Pray for me. 🙃🔥💦'
-                          +'<br><br>#SpiceRegret #SendMilk #NeverAgain (jk, probably again)'
+                          +'<br><br>#SpiceRegret #SendMilk #NeverAgain (jk, probably again)',
+                          edited: false
           },
           { author: users[4]._id, date: new Date('2024-11-03T00:00:00.000Z'), header: 'My First Attempt at Homemade Pasta! 🍝',
             content: 'Okay, making fresh pasta from scratch is WAY harder than I thought. 😅 My kitchen is covered in flour, my arms are sore from kneading, and somehow there’s dough on my dog?? BUT… after a few failed attempts, I finally made a plate of silky, buttery fettuccine, and I feel like a real chef! 👩‍🍳✨'
                       +'<br><br>Next time, I’ll roll it thinner (because wow, my first batch was chunky 😂), but I’m calling this a win! Anyone have pasta-making tips for a beginner? 🍝'
                       +'<br><br>#ChefInTraining #HomemadePasta #FlourEverywhere',
-            img: "homemade_pasta.jpg"
+            img: "homemade_pasta.jpg",
+            edited: false
           }
         ]);
           console.log('Database seeded with initial posts');
