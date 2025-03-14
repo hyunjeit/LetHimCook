@@ -73,7 +73,7 @@
                         </div></a>
                         <div class="post-actions">
                             <div class="interactions">
-                                <button class="btn" onclick="addPopUp(this, 'close_comment_popUp', 'comment_popUp')">
+                                <button class="btn" onclick="addPopUp(this, 'close_comment_popUp_{{this._id}}', 'comment_popUp_{{this._id}}')">
                                     <img src="../media/comment.png" alt="Comment">
                                 </button>
                                 <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
@@ -82,18 +82,18 @@
                             </div>
                         </div>
                     </div>
-                {{/each}}
-
-                <div class="modal btn" id="comment_popUp">
+                <!-- Unique Comment Modal -->
+                <div class="modal btn" id="comment_popUp_{{this._id}}">
                     <div class="modal-inner">
-                        <button id="close_comment_popUp" class="btn"><img src="../media/close.png"></button>
+                        <button id="close_comment_popUp_{{this._id}}" class="btn"><img src="../media/close.png"></button>
                         <form action="/add_comment" method="POST">
                             <textarea name="commentContent" class="textArea" placeholder="Share your thoughts..." required></textarea>
-                            <input type="hidden" name="postId" value="{{post._id}}">
+                            <input type="hidden" name="postId" value="{{this._id}}">
                             <button type="submit" id="post_comment" class="btn">Comment</button>
                         </form>
                     </div>
                 </div>
+                {{/each}}
 
             </div>
 
