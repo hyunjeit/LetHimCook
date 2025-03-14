@@ -79,3 +79,10 @@
 #middle a:hover{
     color: inherit;
 }
+
+.post_edit_indicator {
+    font-size: 14px;
+    color: #888;
+    position: relative;
+    float: right;
+}
