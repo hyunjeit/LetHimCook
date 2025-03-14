@@ -146,7 +146,8 @@ app.post('/add_post', isAuthenticated, async (req, res) => {
             header: header,
             content: content,
             img: imageFileName || null,
-            date: new Date()
+            date: new Date(),
+            edited: false
         });
 
         await newPost.save();
@@ -167,6 +168,7 @@ app.get('/edit_post', isAuthenticated, async (req, res) => {
         if (!post || post.author.toString() !== userData.userID) {
             return res.status(403).send("You can only edit your own posts.");
         }
+        console.log("/edit post:", post); // Debugging
 
         res.render('lui/edit_post.hbs', { post, userData });
     } catch (error) {
@@ -189,7 +191,13 @@ app.post('/update_post', isAuthenticated, async (req, res) => {
         // Update the post
         post.header = header;
         post.content = content;
+        post.edited = true;
+
+        //await post.save();
+
+        console.log("Before saving:", post); // Debugging
         await post.save();
+        console.log("After saving:", post); // Debugging
 
         res.redirect('/main_forum');
     } catch (error) {
@@ -277,7 +285,8 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
             }),
             header: post.header,
             content: post.content,
-            img: post.img
+            img: post.img,
+            edited: post.edited
         }));
 
         res.render('nian/main_forum.hbs', { userData, posts: formattedPosts });
@@ -319,7 +328,8 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
                 }),
                 header: post.header,
                 content: post.content,
-                img: post.img
+                img: post.img,
+                edited: post.edited
             },
             comments: comments.map(comment => ({
                 _id: comment._id.toString(),
@@ -370,7 +380,8 @@ app.get('/open_post_logged_out', async (req, res) => {
                 }),
                 header: post.header,
                 content: post.content,
-                img: post.img
+                img: post.img,
+                edited: post.edited
             },
             comments: comments.map(comment => ({
                 _id: comment._id.toString(),
@@ -418,7 +429,8 @@ app.get('/profile', isAuthenticated, async (req, res) => {
                 date: new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                 header: post.header,
                 content: post.content,
-                img: post.img
+                img: post.img,
+                edited: post.edited
             }))
         });
     } catch (error) {
@@ -450,7 +462,8 @@ app.get('/main_forum_unauthenticated', async (req, res) => {
             }),
             header: post.header,
             content: post.content,
-            img: post.img
+            img: post.img,
+            edited: post.edited
         }));
 
         res.render('nian/main_forum_logged_out.hbs', { posts: formattedPosts });
@@ -660,7 +673,8 @@ app.get('/main_forum_search', isAuthenticated, async (req, res) => {
             }),
             header: post.header,
             content: post.content,
-            img: post.img
+            img: post.img,
+            edited: post.edited
         }));
 
         res.render('nian/main_forum_search.hbs', { 
