@@ -116,28 +116,34 @@ const seedDatabase = async () => {
               content: '@SweetTreatsMama Oh, you KNOW my kids would never say no to free cookies!' +
               '😂 But be warned—once they get a taste, they might start showing up at your door with puppy-dog eyes asking for more.<br><br>'+
               'Also… for totally unselfish reasons, I’ll take a few too. You know, just to quality check them. 😏🍪 #DadTax #SendCookies', 
-              post: posts[1]._id 
+              post: posts[1]._id,
+              edited: false
             },
             { author: users[2]._id, date: new Date('2024-01-09T00:00:00.000Z'), 
               content: 'Now THIS is my kind of weeknight meal! Simple, buttery, and packed with flavor. Might have to throw this on the grill and see how it turns out. 🔥',
-              post: posts[2]._id 
+              post: posts[2]._id,
+              edited: false
             },
             { author: users[0]._id, date: new Date('2024-01-09T00:00:00.000Z'), 
               content: 'Garlic + butter = magic! Also, if your kids eat all their chicken, I have some leftover cookies as a reward. Just saying. 😉',
-              post: posts[2]._id 
+              post: posts[2]._id,
+              edited: false 
             },
             { author: users[3]._id, date: new Date('2024-01-10T00:00:00.000Z'), 
               content: 'Love it! But hear me out—what if we add a little cayenne and a drizzle of chili oil at the end?',
-              post: posts[2]._id 
+              post: posts[2]._id,
+              edited: false 
             },
             { author: users[4]._id, date: new Date('2024-01-10T00:00:00.000Z'), 
               content: 'Omg, this looks so good!! I’ve never cooked chicken like this before, but I’m definitely trying it!',
-              post: posts[2]._id 
+              post: posts[2]._id,
+              edited: false 
             },
             { author: users[1]._id, date: new Date('2024-01-11T00:00:00.000Z'), 
               content: 'Honestly, this meal is a lifesaver on busy nights. One pan, easy cleanup, and the kids actually eat it without too much negotiating.'+ 
               '😂 Pro tip: Make extra sauce because everyone’s gonna want to drizzle it over their rice or mashed potatoes!',
-              post: posts[2]._id 
+              post: posts[2]._id,
+              edited: false 
             }
           ]);
           console.log('Database seeded with initial comments');
