@@ -83,9 +83,9 @@
                         </div>
                     </div>
                 <!-- Unique Comment Modal -->
-                <div class="modal btn" id="comment_popUp_{{this._id}}">
+                <div class="modal btn comment_popUp" id="comment_popUp_{{this._id}}">
                     <div class="modal-inner">
-                        <button id="close_comment_popUp_{{this._id}}" class="btn"><img src="../media/close.png"></button>
+                        <button id="close_comment_popUp_{{this._id}}" class="btn close_comment_popUp"><img src="../media/close.png"></button>
                         <form action="/add_comment" method="POST">
                             <textarea name="commentContent" class="textArea" placeholder="Share your thoughts..." required></textarea>
                             <input type="hidden" name="postId" value="{{this._id}}">

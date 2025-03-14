@@ -53,6 +53,9 @@
 
                 {{#each posts}}
                     <div class="posts" id="photopost">
+                        {{#if this.edited}}
+                            <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
+                        {{/if}}
                         <div class="post-header">
                             <span class="post-avatar">
                                 <img src="profilePics/{{this.authorID}}.jpg" alt="author">

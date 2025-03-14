@@ -67,6 +67,9 @@
                             <span class="post_username">{{this.author}} | {{this.date}}</span>
                         </div>
                         <div class="post_header">{{this.header}}</div>
+                        {{#if this.edited}}
+                            <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
+                        {{/if}}
                         <div class="post_text">{{{this.content}}}</div>
                         {{#if this.img}}
                             <div class="post_photo">
@@ -74,9 +77,11 @@
                             </div>
                         {{/if}}
                         <div class="post_interactions">
-                            <button class="btn"><img src="../media/comment.png" alt="Comment"></button>
-                            <button class="btn" onclick="liked('like-{{this._id}}')"><img src="../media/upvote.png" alt="Thumbs Up"></button>
-                            <button class="btn" onclick="disliked('dislike-{{this._id}}')"><img src="../media/downvote.png" alt="Thumbs Down"></button>
+                            <button class="btn" onclick="addPopUp(this, 'close_comment_popUp_{{this._id}}', 'comment_popUp_{{this._id}}')">
+                                <img src="../media/comment.png" alt="Comment">
+                            </button>
+                            <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
+                            <button class="btn" onclick="disliked(this)"><img src="../media/downvote.png" alt="Thumbs Down"></button>
                             <button class="btn"><img src="../media/share.png" alt="Share"></button>
                             {{#if (eq this.authorID ../userData.userID)}}
                                 <a href="/edit_post?postId={{this._id}}" class="btn"><img src="../media/edit-post.png" alt="Edit"></a>
@@ -84,15 +89,27 @@
                             {{/if}}
                         </div>
                     </div>
+
+                    <!-- Unique Comment Modal -->
+                    <div class="modal btn comment_popUp" id="comment_popUp_{{this._id}}">
+                        <div class="modal-inner">
+                            <button id="close_comment_popUp_{{this._id}}" class="btn close_comment_popUp"><img src="../media/close.png"></button>
+                            <form action="/add_comment" method="POST">
+                                <textarea name="commentContent" class="textArea" placeholder="Share your thoughts..." required></textarea>
+                                <input type="hidden" name="postId" value="{{this._id}}">
+                                <button type="submit" id="post_comment" class="btn">Comment</button>
+                            </form>
+                        </div>
+                    </div>
                 {{/each}}
 
             </div>
 
             <div id="right" class="sidebar">
-                <form action="/main_forum_search" method="GET">
+                <form>
                     <div class="search">
                         <img src="../media/search.png">
-                        <input class="search-input" type="search" name="search" placeholder="search">
+                        <input class="search-input" type="search" placeholder="search">
                     </div>
                 </form>
 
@@ -120,6 +137,6 @@
             </div>
 
         </main>
-        <script src="jei/javascript.js"></script>
+        <script src="lui/javascript.js"></script>
     </body>
 </html>

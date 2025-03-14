@@ -86,6 +86,9 @@
 
                 {{#each comments}}
                     <div class="comment_box">
+                        {{#if this.edited}}
+                            <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
+                        {{/if}}
                         <a href="/profile?userId={{this.authorID}}"><div class="post_username_section">
                             <img src="profilePics/{{this.authorID}}.jpg" class="post_profile_pic">
                             <span class="post_username">{{this.author}} | {{this.date}}</span>

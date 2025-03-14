@@ -168,7 +168,6 @@ app.get('/edit_post', isAuthenticated, async (req, res) => {
         if (!post || post.author.toString() !== userData.userID) {
             return res.status(403).send("You can only edit your own posts.");
         }
-        console.log("/edit post:", post); // Debugging
 
         res.render('lui/edit_post.hbs', { post, userData });
     } catch (error) {
@@ -192,12 +191,7 @@ app.post('/update_post', isAuthenticated, async (req, res) => {
         post.header = header;
         post.content = content;
         post.edited = true;
-
-        //await post.save();
-
-        console.log("Before saving:", post); // Debugging
         await post.save();
-        console.log("After saving:", post); // Debugging
 
         res.redirect('/main_forum');
     } catch (error) {
@@ -217,7 +211,8 @@ app.post('/add_comment', isAuthenticated, async (req, res) => {
             content: commentContent,
             author: user.userID,
             post: postId,
-            date: new Date()
+            date: new Date(),
+            edited: false
         });
 
         await newComment.save();
@@ -259,6 +254,8 @@ app.post('/update_comment', isAuthenticated, async (req, res) => {
 
         // Update the comment
         comment.content = content;
+        comment.edited = true;
+
         await comment.save();
 
         res.redirect(`/open_post_logged_in?postId=${postId}`);
@@ -340,7 +337,8 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
                     month: 'short',
                     day: 'numeric'
                 }) : 'Just now',
-                content: comment.content
+                content: comment.content,
+                edited: comment.edited
             }))
         });
     } catch (error) {
@@ -391,7 +389,8 @@ app.get('/open_post_logged_out', async (req, res) => {
                     month: 'short',
                     day: 'numeric'
                 }),
-                content: comment.content
+                content: comment.content,
+                edited: comment.edited
             }))
         });
     } catch (error) {
