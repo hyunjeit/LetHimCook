@@ -20,3 +20,5 @@ The user is first presented with the landing page, where they can either log-in 
 Furthermore, it is also possible to browse the forum while logged-out, though the user will not be able to interact with posts and comments. Additionally, an account can also be created which will allow a user to have their own account and access the web application's functionalities.
 
 Once logged in, a user can then: browse through posts; open posts (which will show comments under it, if any); create, edit, and delete their own posts and comments; view profiles; edit their own profile as well as their picture; and search for keywords and tags.
+
+https://github.com/expressjs/session/issues/556
