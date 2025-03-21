@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/auth_demo');
+mongoose.connect('mongodb+srv://nianmuros:niansmongo@cluster0.uestz.mongodb.net/auth_demo');
 
 // Check DB connection
 mongoose.connection.once('open', async () => {
