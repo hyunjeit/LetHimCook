@@ -6,7 +6,6 @@
 /* dependencies */
 const express = require('express');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');//temp
 const cookieParser = require('cookie-parser');
 const fileupload = require('express-fileupload'); //... for some reason express-fileupload makes the site not load...
 
@@ -57,7 +56,6 @@ app.use(
     session({
         // TODO: improve on the secret key for security reasons
         secret: "secret-key",
-        store: MongoStore.create(options),//temp
         resave: false,
         saveUninitialized: false,
         cookie: {
