@@ -3,6 +3,7 @@
     <head>
         <title>log_in</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="james/LoginForm.js" defer></script>
         <link rel="stylesheet" type="text/css" href="james/landingStyle.css">
         <link rel="stylesheet" type="text/css" href="james/loginStyle.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,13 +27,14 @@
                         <span id="LOG_IN">LOG IN</span>
                     </div>
                     <div id="input_group">
-                        <form action="/login" method="POST">
+                        <!--form action="/login" method="POST"-->
+                        <form>
                             <label class="inter-100" name="username">Username or email
-                                <input type="text" name="username" autocomplete="name">
+                                <input id="usernameInput" type="text" name="username" autocomplete="name">
                             </label>
                             
                             <label class="inter-100" name="password">Password
-                                <input type="password" name="password">
+                                <input id="passwordInput" type="password" name="password">
                             </label>
                             
                             <div style="margin-top:10px">
