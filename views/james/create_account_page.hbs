@@ -4,6 +4,7 @@
         <title>create_account</title>
         <link rel="stylesheet" type="text/css" href="james/landingStyle.css">
         <link rel="stylesheet" type="text/css" href="james/createAccountStyle.css">
+        <script src="james/RegisterForm.js" defer></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Julius+Sans+One&display=swap" rel="stylesheet">
@@ -21,22 +22,22 @@
                     <span class="inter-100" id="create_an_account">Create an account</span>
                 </div>
                 <div class="center">
-                    <form action="/register" method="POST">
+                    <form>
                         <label class="inter-100" name="email">Email
-                            <input type="text" name="email" autocomplete="name">
+                            <input id="createAccountEmail" type="text" name="email" autocomplete="name">
                         </label>
 
                         <label class="inter-100" name="username">Username
-                            <input type="text" name="username" autocomplete="name">
+                            <input id="createAccountUsername" type="text" name="username" autocomplete="name">
                         </label>
                         
                         <label class="inter-100" name="password">Password
-                            <input type="password" name="password">
+                            <input id="createAccountPassword" type="password" name="password">
                         </label>
 
                         <div id="buttonPanel">
                             <button type=button id="cancel" class="inter-100" onclick="location.href='/'">Cancel</button>
-                            <button type=submit id="sign_up" class="inter-100">Sign up</button>
+                            <button type=button id="sign_up" class="inter-100">Sign up</button>
                         </div>
                     </form>
                 </div>

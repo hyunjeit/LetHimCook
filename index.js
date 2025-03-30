@@ -111,6 +111,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
+    if (req.session.user){
+        return res.redirect('/main_forum');
+    }
     res.render('james/log_in_page.hbs');
     console.log(req.session.user);
     // TODO: use res.sendfile instead
@@ -481,6 +484,8 @@ app.get('/register', (req, res) => {
 app.post('/login', async (req, res) => {
     const { username, password , remember_me} = req.body;
 
+    console.log("request body received by login route: " + req.body);
+
     // TODO: if user is already authenticated because they chose to be remembered, immediately redirect to main forum
     try {
         // use username from req.body to look for the user
@@ -493,40 +498,42 @@ app.post('/login', async (req, res) => {
             user = await User.findOne({email: username});
 
             if (!user){
-                // if user was not found, send to another page
-                // TODO: make this page look better, or make it a popup
-                //return res.send("Invalid credentials. <a href='/login'>Try again</a>");
-                return res.redirect('/login');
+                console.log("invalid credentials");
+                return res.json({message: "invalid"});
+                //return res.redirect('/login');
             }
         }
 
         // Compare the hashed password with the plaintext password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            // TODO: make this page look better, or make it a popup
-            //return res.send("Invalid credentials. <a href='/login'>Try again</a>");
-            return res.redirect('/login');
+            console.log("invalid credentials");
+            return res.json({message: "invalid"});
+            //return res.redirect('/login');
         }
+
+        console.log("successful login");
 
         // Store user data in session
         req.session.user = { 
             username: user.username, 
             userID: user._id,
             //profileImage: user.profileImage,
-            bio: user.bio};
+            bio: user.bio
+        };
         res.cookie("sessionId", req.sessionID);
-        console.log(req.session.user);
+        console.log("session:" + req.session.user);
 
         // if remembering user, set cookie max age to 30 days
         if (remember_me){
             req.session.cookie.maxAge = rememberMeCookieMaxAge; // Set cookie to 30 days
         }
 
-        res.redirect("/main_forum");
+        res.status(200).json({message: 'success', redirect: '/main_forum'});
+        //res.redirect("/main_forum");
 
     } catch (error) {
-        // TODO: perhaps this should also be a popup, though ideally this scenario should never happen
-        res.status(500).send("Error logging in. " + error);
+        res.status(500).json({message: 'error logging in'});
     }
 });
 
@@ -546,8 +553,12 @@ app.post('/register', async (req, res) => {
             if (existingUser){
                 // if user was not found, send to another page
                 // TODO: make this page look better, or make it a popup
-                return res.send("User already exists. <a href='/register'>Try again</a>");
+                //return res.send("User already exists. <a href='/register'>Try again</a>");
+                return res.json({message: 'invalid email'})
             }
+        }
+        else{
+            return res.json({message: 'invalid username'})
         }
 
         // Create and save new user with encrypted password
@@ -556,9 +567,9 @@ app.post('/register', async (req, res) => {
 
         // res.send("Registration successful! <a href='/login'>Login here</a>");
 
-        res.redirect("/login");
+        res.status(200).json({message:'success',redirect:'/login'})
     } catch (error) {
-        res.status(500).send("Error registering user. " + error);
+        return res.json({message: 'incomplete'})
     }
 })
 
