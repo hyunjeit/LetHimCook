@@ -1,6 +1,5 @@
 
 
-
 /*
 function liked(button) {
     let displayImage = button.querySelector("img");  // Select the image inside the button
@@ -55,7 +54,6 @@ function disliked(button) {
         dislikeImg.src = "/media/downvote.png"; // Deactivate dislike
     }
 }
-*/
 
 function liked(button) {
     let postBox = button.closest(".comment_box") || button.closest(".post_box") || button.closest(".posts");
@@ -88,6 +86,83 @@ function disliked(button) {
         dislikeImg.src = "/media/downvote.png"; // Deactivate dislike
     }
 }
+
+async function liked(button, postId, userId) {
+    const response = await fetch("/like", {  
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postId, userId })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        updateUI(button, data.likedBy.includes(userId), data.dislikedBy.includes(userId));
+    }
+}
+
+async function disliked(button, postId, userId) {
+    const response = await fetch("/dislike", {  
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postId, userId })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        updateUI(button, data.likedBy.includes(userId), data.dislikedBy.includes(userId));
+    }
+}
+
+// Update UI based on updated database values
+function updateUI(button, likedByUser, dislikedByUser) {
+    let postBox = button.closest(".post_box"); 
+    let likeButton = postBox.querySelector(".like img");
+    let dislikeButton = postBox.querySelector(".dislike img");
+
+    likeButton.src = likedByUser ? "/media/orange_upvote.png" : "/media/upvote.png";
+    dislikeButton.src = dislikedByUser ? "/media/orange_downvote.png" : "/media/downvote.png";
+}
+*/
+
+//EDITS
+async function liked(button, id, userId, type) {
+    const response = await fetch("/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, userId, type }) // Sending type to know if it's a post or comment
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        updateUI(button, data.likedBy.includes(userId), data.dislikedBy.includes(userId), type, id);
+    }
+}
+
+async function disliked(button, id, userId, type) {
+    const response = await fetch("/dislike", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, userId, type }) // Sending type
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        updateUI(button, data.likedBy.includes(userId), data.dislikedBy.includes(userId), type, id);
+    }
+}
+
+// Update UI based on updated database values
+function updateUI(button, likedByUser, dislikedByUser, type, id) {
+    let container = document.querySelector(`#${type}-${id}`); // Get either post or comment container
+    if (!container) return;
+
+    let likeButton = container.querySelector(".like img");
+    let dislikeButton = container.querySelector(".dislike img");
+
+    likeButton.src = likedByUser ? "/media/orange_upvote.png" : "/media/upvote.png";
+    dislikeButton.src = dislikedByUser ? "/media/orange_downvote.png" : "/media/downvote.png";
+}
+//
 
 function copyLinkToClipboard() {
     const url = window.location.href; // Get the current page URL

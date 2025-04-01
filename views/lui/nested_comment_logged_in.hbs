@@ -49,7 +49,7 @@
             <!-- MIDDLE SECTION:-->
             <div id="middle">
                 <!-- MAIN COMMENT -->
-                <div class="comment_box">
+                <div class="comment_box" id="comment-{{this._id}}">
                         {{#if mainComment.edited}}
                             <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
                         {{/if}}
@@ -64,8 +64,13 @@
                                 <img src="../media/comment.png" alt="Comment">
                             </button>
                             
-                            <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
-                            <button class="btn" onclick="disliked(this)"><img src="../media/downvote.png" alt="Thumbs Down"></button>
+                            <button class="btn like" onclick="liked(this, '{{mainComment._id}}', '{{userData.userID}}', 'comment')">
+                                <img src="../media/{{#if mainComment.likedByUser}}orange_upvote.png{{else}}upvote.png{{/if}}" alt="Like">
+                            </button>
+
+                            <button class="btn dislike" onclick="disliked(this, '{{mainComment._id}}', '{{userData.userID}}', 'comment')">
+                                <img src="../media/{{#if mainComment.dislikedByUser}}orange_downvote.png{{else}}downvote.png{{/if}}" alt="Dislike">
+                            </button>
 
                             <button class="btn" onclick="copyLinkToClipboard()">
                                 <img src="../media/share.png" alt="Share">
@@ -82,7 +87,7 @@
                     </div>
 
                 {{#each comments}}
-                    <div class="comment_box">
+                    <div class="comment_box" id="comment-{{this._id}}">
                         {{#if this.edited}}
                             <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
                         {{/if}}
@@ -101,8 +106,13 @@
                                 <img src="../media/comment.png" alt="Comment">
                             </button>
                             
-                            <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
-                            <button class="btn" onclick="disliked(this)"><img src="../media/downvote.png" alt="Thumbs Down"></button>
+                            <button class="btn like" onclick="liked(this, '{{this._id}}', '{{../userData.userID}}', 'comment')">
+                                <img src="../media/{{#if this.likedByUser}}orange_upvote.png{{else}}upvote.png{{/if}}" alt="Like">
+                            </button>
+
+                            <button class="btn dislike" onclick="disliked(this, '{{this._id}}', '{{../userData.userID}}', 'comment')">
+                                <img src="../media/{{#if this.dislikedByUser}}orange_downvote.png{{else}}downvote.png{{/if}}" alt="Dislike">
+                            </button>
 
                             <button class="btn" onclick="copyLinkToClipboard()">
                                 <img src="../media/share.png" alt="Share">

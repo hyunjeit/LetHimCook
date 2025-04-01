@@ -10,7 +10,11 @@ const PostSchema = new mongoose.Schema({
   header: {type: String, required: true},
   content: {type: String, required: true},
   img: {type: String, required: false},
-  edited: {type: Boolean, required: true}
+  edited: {type: Boolean, required: true},
+
+  //EDITS
+  likedBy: { type: [String], default: [] },  // Stores user IDs who liked
+  dislikedBy: { type: [String], default: [] } // Stores user IDs who disliked
 });
 
 module.exports = mongoose.model('Post', PostSchema);

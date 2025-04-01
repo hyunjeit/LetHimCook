@@ -9,7 +9,10 @@ const CommentSchema = new mongoose.Schema({
   },
   content: {type: String, required: true},
   post: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},
-  edited: {type: Boolean, required: true}
+  edited: {type: Boolean, required: true},
+
+  likedBy: { type: [String], default: [] },  // Stores user IDs who liked
+  dislikedBy: { type: [String], default: [] } // Stores user IDs who disliked
 });
 
 module.exports = mongoose.model('Comment', CommentSchema);

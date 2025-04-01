@@ -72,12 +72,18 @@
                             {{/if}}
                         </div></a>
                         <div class="post-actions">
-                            <div class="interactions">
+                            <div class="interactions" id="post-{{this._id}}">
                                 <button class="btn" onclick="addPopUp(this, 'close_comment_popUp_{{this._id}}', 'comment_popUp_{{this._id}}')">
                                     <img src="../media/comment.png" alt="Comment">
                                 </button>
-                                <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
-                                <button class="btn" onclick="disliked(this)"><img src="../media/downvote.png" alt="Thumbs Down"></button>
+
+                                <button class="btn like" onclick="liked(this, '{{this._id}}', '{{../userData.userID}}', 'post')">
+                                    <img src="../media/{{#if this.likedByUser}}orange_upvote.png{{else}}upvote.png{{/if}}" alt="Like">
+                                </button>
+
+                                <button class="btn dislike" onclick="disliked(this, '{{this._id}}', '{{../userData.userID}}', 'post')">
+                                    <img src="../media/{{#if this.dislikedByUser}}orange_downvote.png{{else}}downvote.png{{/if}}" alt="Dislike">
+                                </button>
                                 
                                 <button class="btn" onclick="copyLinkToClipboard()">
                                     <img src="../media/share.png" alt="Share">

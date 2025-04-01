@@ -294,7 +294,9 @@ app.get('/main_forum', isAuthenticated, async (req, res) => {
             header: post.header,
             content: post.content,
             img: post.img,
-            edited: post.edited
+            edited: post.edited,
+            likedByUser: post.likedBy.includes(userData.userID),
+            dislikedByUser: post.dislikedBy.includes(userData.userID)
         }));
 
         res.render('nian/main_forum.hbs', { userData, posts: formattedPosts });
@@ -337,7 +339,9 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
                 header: post.header,
                 content: post.content,
                 img: post.img,
-                edited: post.edited
+                edited: post.edited,
+                likedByUser: post.likedBy.includes(userData.userID),
+                dislikedByUser: post.dislikedBy.includes(userData.userID)
             },
             comments: comments.map(comment => ({
                 _id: comment._id.toString(),
@@ -349,7 +353,9 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
                     day: 'numeric'
                 }) : 'Just now',
                 content: comment.content,
-                edited: comment.edited
+                edited: comment.edited,
+                likedByUser: comment.likedBy.includes(userData.userID),
+                dislikedByUser: comment.dislikedBy.includes(userData.userID)
             }))
         });
     } catch (error) {
@@ -358,8 +364,6 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
     }
 });
 
-
-//ATTEMPT 1
 app.get('/nested_comment_logged_in', isAuthenticated, async (req, res) => {
     try {
         const userData = req.session.user;
@@ -391,7 +395,9 @@ app.get('/nested_comment_logged_in', isAuthenticated, async (req, res) => {
                     day: 'numeric'
                 }) : 'Just now',
                 content: mainComment.content,
-                edited: mainComment.edited
+                edited: mainComment.edited,
+                likedByUser: mainComment.likedBy.includes(userData.userID),
+                dislikedByUser: mainComment.dislikedBy.includes(userData.userID)
             },
             comments: comments.map(comment => ({
                 _id: comment._id.toString(),
@@ -403,7 +409,9 @@ app.get('/nested_comment_logged_in', isAuthenticated, async (req, res) => {
                     day: 'numeric'
                 }) : 'Just now',
                 content: comment.content,
-                edited: comment.edited
+                edited: comment.edited,
+                likedByUser: comment.likedBy.includes(userData.userID),
+                dislikedByUser: comment.dislikedBy.includes(userData.userID)
             }))
         });
     } catch (error) {
@@ -796,7 +804,9 @@ app.get('/main_forum_search', isAuthenticated, async (req, res) => {
             header: post.header,
             content: post.content,
             img: post.img,
-            edited: post.edited
+            edited: post.edited,
+            likedByUser: post.likedBy.includes(userData.userID),
+            dislikedByUser: post.dislikedBy.includes(userData.userID)
         }));
 
         res.render('nian/main_forum_search.hbs', { 
@@ -888,6 +898,64 @@ app.get('/delete_comment', isAuthenticated, async (req, res) => {
         res.status(500).send("Failed to delete comment.");
     }
 });
+
+
+app.post('/like', isAuthenticated, async (req, res) => {
+    try {
+        const { id, userId, type } = req.body;
+        
+        let Model = type === 'comment' ? Comment : Post; // Check if it's a comment or post
+        let item = await Model.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        if (item.likedBy.includes(userId)) {
+            // If already liked, remove like
+            item.likedBy = item.likedBy.filter(uid => uid !== userId);
+        } else {
+            // Otherwise, like it and remove from dislikedBy (if previously disliked)
+            item.likedBy.push(userId);
+            item.dislikedBy = item.dislikedBy.filter(uid => uid !== userId);
+        }
+        console.log(item);
+        await item.save();
+        res.json({ likedBy: item.likedBy, dislikedBy: item.dislikedBy });
+    } catch (error) {
+        console.error("Error liking:", error);
+        res.status(500).json({ message: "Error processing like" });
+    }
+});
+
+app.post('/dislike', isAuthenticated, async (req, res) => {
+    try {
+        const { id, userId, type } = req.body;
+        
+        let Model = type === 'comment' ? Comment : Post;
+        let item = await Model.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        if (item.dislikedBy.includes(userId)) {
+            // If already disliked, remove dislike
+            item.dislikedBy = item.dislikedBy.filter(uid => uid !== userId);
+        } else {
+            // Otherwise, dislike it and remove from likedBy (if previously liked)
+            item.dislikedBy.push(userId);
+            item.likedBy = item.likedBy.filter(uid => uid !== userId);
+        }
+
+        await item.save();
+        res.json({ likedBy: item.likedBy, dislikedBy: item.dislikedBy });
+    } catch (error) {
+        console.error("Error disliking:", error);
+        res.status(500).json({ message: "Error processing dislike" });
+    }
+});
+
 
 
 app.listen(3000, () => {
