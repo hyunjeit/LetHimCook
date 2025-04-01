@@ -208,7 +208,6 @@ app.post('/add_comment', isAuthenticated, async (req, res) => {
     try {
         const { commentContent, postId, nested } = req.body;
         const user = req.session.user;
-        console.log("postId:", postId);
 
         // Create a new comment
         const newComment = new Comment({

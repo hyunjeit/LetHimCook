@@ -72,7 +72,10 @@
 
                         <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
                         <button class="btn" onclick="disliked(this)"><img src="../media/downvote.png" alt="Thumbs Down"></button>
-                        <button class="btn"><img src="../media/share.png" alt="Share"></button>
+                        
+                        <button class="btn" onclick="copyLinkToClipboard()">
+                            <img src="../media/share.png" alt="Share">
+                        </button>
                     </div>
                 </div>
 
@@ -99,7 +102,10 @@
                             
                             <button class="btn" onclick="liked(this)"><img src="../media/upvote.png" alt="Thumbs Up"></button>
                             <button class="btn" onclick="disliked(this)"><img src="../media/downvote.png" alt="Thumbs Down"></button>
-                            <button class="btn"><img src="../media/share.png" alt="Share"></button>
+                            
+                            <button class="btn" onclick="copyLinkToClipboard()">
+                                <img src="../media/share.png" alt="Share">
+                            </button>
                         </div>
                     </div>
                 {{/each}}
@@ -122,10 +128,10 @@
 
             <!-- RIGHT SIDEBAR -->
             <div id="right" class="sidebar">
-                <form>
+                <form action="/main_forum_search" method="GET">
                     <div class="search">
                         <img src="../media/search.png">
-                        <input class="search-input" type="search" placeholder="search">
+                        <input class="search-input" type="search" name="search" placeholder="search">
                     </div>
                 </form>
             </div>

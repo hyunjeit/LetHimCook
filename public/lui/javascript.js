@@ -89,6 +89,17 @@ function disliked(button) {
     }
 }
 
+function copyLinkToClipboard() {
+    const url = window.location.href; // Get the current page URL
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            alert("Link copied to clipboard!");
+        })
+        .catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+}
+
 function addPopUp(openButton, closeButtonId, popUpId) {
     const popUp = document.getElementById(popUpId);
     const closeButton = document.getElementById(closeButtonId);
