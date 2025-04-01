@@ -919,7 +919,6 @@ app.post('/like', isAuthenticated, async (req, res) => {
             item.likedBy.push(userId);
             item.dislikedBy = item.dislikedBy.filter(uid => uid !== userId);
         }
-        console.log(item);
         await item.save();
         res.json({ likedBy: item.likedBy, dislikedBy: item.dislikedBy });
     } catch (error) {
