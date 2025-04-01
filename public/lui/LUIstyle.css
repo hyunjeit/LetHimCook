@@ -98,4 +98,42 @@
     margin-top: 8px;
 }
 
+/*COMMENT POP-UP - parts that have to be changed*/
+.comment_popUp .modal-inner{
+    background-color: #ffbb5c;
+    border: 3px #FE6F20;
+    border-radius: 5px;
+    text-align: center;
+    height: 100px;
+    width: 380px;
+}
+.comment_popUp textarea{
+    margin: 0px;
+    background-color: #fff;
+    height: 80%;
+    border-radius: 10px;
+    position: relative;
+    bottom: 20px;
+    right: 8px;
+    padding: 10px;
+}
+.close_comment_popUp, .close_comment_popUp img{ 
+    background-color: transparent;
+    height: 18px;
+    position: relative;
+    left: 100px;
+    bottom: 6px;
+}
+#post_comment{
+    position: relative;
+    background-color: #FE6F20;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    left: 140px;
+    bottom: 18px;
+}
 

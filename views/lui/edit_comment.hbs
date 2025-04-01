@@ -55,6 +55,7 @@
                             <!-- Hidden inputs to pass commentId and postId -->
                             <input type="hidden" name="commentId" value="{{comment._id}}">
                             <input type="hidden" name="postId" value="{{postId}}">
+                            <input type="hidden" name="nested" value="{{nested}}">
 
                             <!-- Textarea to edit comment content -->
                             <textarea class="textArea" name="content" required>{{comment.content}}</textarea>

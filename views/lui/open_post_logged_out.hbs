@@ -86,7 +86,11 @@
                             <span class="post_username">{{this.author}} | {{this.date}}</span>
                         </div></a>
                         <div class="post_edit_indicator"></div>
+                        
+                        <a href="/nested_comment_logged_out?mainCommentId={{this._id}}"> 
                         <div class="post_text">{{{this.content}}}</div>
+                        </a>
+
                         <div class="post_interactions">
                             
                             <button class="btn" id="comment2" onclick="addPopUp(this, 'closePopUp', 'log-in_popUp')">

@@ -206,8 +206,9 @@ app.post('/update_post', isAuthenticated, async (req, res) => {
 // create comment
 app.post('/add_comment', isAuthenticated, async (req, res) => {
     try {
-        const { commentContent, postId } = req.body;
+        const { commentContent, postId, nested } = req.body;
         const user = req.session.user;
+        console.log("postId:", postId);
 
         // Create a new comment
         const newComment = new Comment({
@@ -217,19 +218,24 @@ app.post('/add_comment', isAuthenticated, async (req, res) => {
             date: new Date(),
             edited: false
         });
-
         await newComment.save();
-        res.redirect(`/open_post_logged_in?postId=${postId}`);
+
+        if(!nested){
+            res.redirect(`/open_post_logged_in?postId=${postId}`);
+        }else{
+            res.redirect(`/nested_comment_logged_in?mainCommentId=${postId}`);
+        }
     } catch (error) {
         console.error("Error adding comment:", error);
         res.status(500).send("Failed to add comment.");
     }
 });
 
+
 // edit comment
 app.get('/edit_comment', isAuthenticated, async (req, res) => {
     try {
-        const { commentId, postId } = req.query;
+        const { commentId, postId, nested } = req.query;
         const userData = req.session.user;
 
         const comment = await Comment.findById(commentId);
@@ -237,7 +243,7 @@ app.get('/edit_comment', isAuthenticated, async (req, res) => {
             return res.status(403).send("You can only edit your own comments.");
         }
 
-        res.render('lui/edit_comment.hbs', { comment, postId, userData });
+        res.render('lui/edit_comment.hbs', { comment, postId, userData, nested });
     } catch (error) {
         console.error("Error loading comment:", error);
         res.status(500).send("Failed to load comment.");
@@ -247,7 +253,7 @@ app.get('/edit_comment', isAuthenticated, async (req, res) => {
 //update comment
 app.post('/update_comment', isAuthenticated, async (req, res) => {
     try {
-        const { commentId, content, postId } = req.body;
+        const { commentId, content, postId, nested } = req.body;
         const userData = req.session.user;
 
         const comment = await Comment.findById(commentId);
@@ -260,8 +266,11 @@ app.post('/update_comment', isAuthenticated, async (req, res) => {
         comment.edited = true;
 
         await comment.save();
-
-        res.redirect(`/open_post_logged_in?postId=${postId}`);
+        if(!nested){
+            res.redirect(`/open_post_logged_in?postId=${postId}`);
+        }else{
+            res.redirect(`/nested_comment_logged_in?mainCommentId=${postId}`);
+        }
     } catch (error) {
         console.error("Error updating comment:", error);
         res.status(500).send("Failed to update comment.");
@@ -351,6 +360,61 @@ app.get('/open_post_logged_in', isAuthenticated, async (req, res) => {
 });
 
 
+//ATTEMPT 1
+app.get('/nested_comment_logged_in', isAuthenticated, async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const mainCommentId = req.query.mainCommentId;
+
+        if (!mainCommentId) {
+            return res.status(400).send("main comment ID is required.");
+        }
+
+        const mainComment = await Comment.findById(mainCommentId).populate('author', 'username');
+        if (!mainComment) {
+            return res.status(404).send("Comment not found.");
+        }
+
+        const comments = await Comment.find({ post: mainCommentId }).populate('author', 'username').sort({ date: -1, _id: 1 });
+
+
+        res.render('lui/nested_comment_logged_in.hbs', { 
+            userData: {
+                userID: userData.userID,
+                username: userData.username
+            }, 
+            mainComment: {
+                _id: mainComment._id.toString(),
+                author: mainComment.author.username,
+                authorID: mainComment.author._id.toString(),
+                date: mainComment.date ? new Date(mainComment.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'Just now',
+                content: mainComment.content,
+                edited: mainComment.edited
+            },
+            comments: comments.map(comment => ({
+                _id: comment._id.toString(),
+                author: comment.author.username,
+                authorID: comment.author._id.toString(),
+                userID: userData.userID,
+                date: comment.date ? new Date(comment.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'Just now',
+                content: comment.content,
+                edited: comment.edited
+            }))
+        });
+    } catch (error) {
+        console.error("Error fetching comment:", error);
+        res.status(500).send("Error loading comment.");
+    }
+});
+
+
+
 app.get('/open_post_logged_out', async (req, res) => {
     try {
         const userData = req.session.user;
@@ -401,6 +465,55 @@ app.get('/open_post_logged_out', async (req, res) => {
         res.status(500).send("Error loading post.");
     }
 });
+
+
+app.get('/nested_comment_logged_out', async (req, res) => {
+    try {
+        const userData = req.session.user;
+        const mainCommentId = req.query.mainCommentId;
+
+        if (!mainCommentId) {
+            return res.status(400).send("main comment ID is required.");
+        }
+
+        const mainComment = await Comment.findById(mainCommentId).populate('author', 'username');
+        if (!mainComment) {
+            return res.status(404).send("Comment not found.");
+        }
+
+        const comments = await Comment.find({ post: mainCommentId }).populate('author', 'username').sort({ date: -1, _id: 1 });
+
+        res.render('lui/nested_comment_logged_out.hbs', { 
+            userData, 
+            mainComment: {
+                _id: mainComment._id.toString(),
+                author: mainComment.author.username,
+                authorID: mainComment.author._id.toString(),
+                date: mainComment.date ? new Date(mainComment.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'Just now',
+                content: mainComment.content,
+                edited: mainComment.edited
+            },
+            comments: comments.map(comment => ({
+                _id: comment._id.toString(),
+                author: comment.author.username,
+                authorID: comment.author._id.toString(),
+                date: comment.date ? new Date(comment.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'Just now',
+                content: comment.content,
+                edited: comment.edited
+            }))
+        });
+    } catch (error) {
+        console.error("Error fetching comment:", error);
+        res.status(500).send("Error loading comment.");
+    }
+});
+
 
 app.get('/profile', isAuthenticated, async (req, res) => {
     const loggedInUser = req.session.user;
@@ -712,23 +825,38 @@ hbs.registerHelper('highlightHashtags', function(text) {
 // delete posts
 app.get('/delete_post', isAuthenticated, async (req, res) => {
     try {
-        const postId = req.query.postId;
+        const { postId, nested } = req.query;
         const userData = req.session.user;
 
-        // Find the post and verify the author
-        const post = await Post.findById(postId);
-        if (!post || post.author.toString() !== userData.userID) {
-            return res.status(403).send("You can only delete your own posts.");
+        if(!nested){
+            // Find the post and verify the author
+            const post = await Post.findById(postId);
+            if (!post || post.author.toString() !== userData.userID) {
+                return res.status(403).send("You can only delete your own posts.");
+            }
+            // Delete all comments related to the post
+            await Comment.deleteMany({ post: postId });
+            // Delete the post itself
+            await Post.findByIdAndDelete(postId);
+            // Redirect back to the main forum
+            res.redirect('/main_forum');
+
+        }else{
+            const mainComment = await Comment.findById(postId);
+            if (!mainComment || mainComment.author.toString() !== userData.userID) {
+                return res.status(403).send("You can only delete your own comments.");
+            }
+            // Delete all comments related to the post
+            await Comment.deleteMany({ post: postId });
+            await Comment.findByIdAndDelete(postId);
+
+            const check = await Post.findById(mainComment.post);
+            if(!check){
+                res.redirect(`/nested_comment_logged_in?mainCommentId=${mainComment.post}`);
+            }else{
+                res.redirect(`/open_post_logged_in?postId=${mainComment.post}`);
+            }
         }
-
-        // Delete all comments related to the post
-        await Comment.deleteMany({ post: postId });
-
-        // Delete the post itself
-        await Post.findByIdAndDelete(postId);
-
-        // Redirect back to the main forum
-        res.redirect('/main_forum');
     } catch (error) {
         console.error("Error deleting post:", error);
         res.status(500).send("Failed to delete post.");
@@ -738,7 +866,7 @@ app.get('/delete_post', isAuthenticated, async (req, res) => {
 // delete comments
 app.get('/delete_comment', isAuthenticated, async (req, res) => {
     try {
-        const { commentId, postId } = req.query;
+        const { commentId, postId, nested } = req.query;
         const userData = req.session.user;
 
         // Find the comment and verify the author
@@ -751,7 +879,11 @@ app.get('/delete_comment', isAuthenticated, async (req, res) => {
         await Comment.findByIdAndDelete(commentId);
 
         // Redirect back to the post
-        res.redirect(`/open_post_logged_in?postId=${postId}`);
+        if(!nested){
+            res.redirect(`/open_post_logged_in?postId=${postId}`);
+        }else{
+            res.redirect(`/nested_comment_logged_in?mainCommentId=${postId}`);
+        }
     } catch (error) {
         console.error("Error deleting comment:", error);
         res.status(500).send("Failed to delete comment.");

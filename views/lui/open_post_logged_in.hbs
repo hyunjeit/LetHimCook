@@ -93,11 +93,14 @@
                             <img src="profilePics/{{this.authorID}}.jpg" class="post_profile_pic">
                             <span class="post_username">{{this.author}} | {{this.date}}</span>
                         </div></a>
-                        <div class="post_edit_indicator"></div>
+                        
+                        <a href="/nested_comment_logged_in?mainCommentId={{this._id}}"> 
                         <div class="post_text">{{{this.content}}}</div>
+                        </a>
+
                         <div class="post_interactions">
                             
-                            <button class="btn" id="comment2" onclick="addPopUp(this, 'close_comment_popUp', 'comment_popUp')">
+                            <button class="btn" id="comment2" onclick="addPopUp(this, 'close_comment_popUp_{{this._id}}', 'comment_popUp_{{this._id}}')">
                                 <img src="../media/comment.png" alt="Comment">
                             </button>
                             
@@ -115,6 +118,20 @@
                             {{/if}}
                         </div>
                     </div>
+
+                    <!-- Unique Comment Modal -->
+                    <div class="modal btn comment_popUp" id="comment_popUp_{{this._id}}">
+                        <div class="modal-inner">
+                            <button id="close_comment_popUp_{{this._id}}" class="btn close_comment_popUp"><img src="../media/close.png"></button>
+                            <form action="/add_comment" method="POST">
+                                <textarea name="commentContent" class="textArea" placeholder="Share your thoughts..." required></textarea>
+                                <input type="hidden" name="postId" value="{{this._id}}">
+                                <input type="hidden" name="nested" value="true">
+                                <button type="submit" id="post_comment" class="btn">Comment</button>
+                            </form>
+                        </div>
+                    </div>
+
                 {{/each}}
 
                 <!--Comment pop-up-->

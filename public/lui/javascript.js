@@ -1,3 +1,7 @@
+
+
+
+/*
 function liked(button) {
     let displayImage = button.querySelector("img");  // Select the image inside the button
     let currentSrc = displayImage.src.split('/').pop(); // Get only the filename
@@ -20,21 +24,70 @@ function disliked(button) {
     }
 }
 
+function liked(button) {
+    let commentBox = button.closest(".comment_box") || document.querySelector(".post_box") || document.querySelector(".posts");
 
-/**function addPopUp(openButtonId, closeButtonId, popUpId){
-    const openBtn=document.getElementById(openButtonId);
-    const closeBtn=document.getElementById(closeButtonId);
-    const modal=document.getElementById(popUpId);
+    let likeImg = button.querySelector("img");
+    let dislikeButton = commentBox.querySelector(".post_interactions button:nth-child(3) img"); // Find the dislike button image
 
-    //this adds and removes the "open" class from the model
-    //the open class makes the z-index (like, the layer indicator) into 999 (making it appear on top of everything)
-    openBtn.addEventListener("click", ()=>{
-        modal.classList.add("open");
-    });
-    closeBtn.addEventListener("click", ()=>{
-        modal.classList.remove("open");
-});
-}**/
+    console.log("Like clicked!"); // Debugging log
+
+    if (likeImg.src.includes("upvote.png")) {
+        likeImg.src = "/media/orange_upvote.png"; // Activate like
+        dislikeButton.src = "/media/downvote.png"; // Reset dislike
+    } else {
+        likeImg.src = "/media/upvote.png"; // Deactivate like
+    }
+}
+
+function disliked(button) {
+    let commentBox = button.closest(".comment_box") || document.querySelector(".post_box") || document.querySelector(".posts");
+
+    let dislikeImg = button.querySelector("img");
+    let likeButton = commentBox.querySelector(".post_interactions button:nth-child(2) img"); // Find the like button image
+
+    console.log("Dislike clicked!"); // Debugging log
+
+    if (dislikeImg.src.includes("downvote.png")) {
+        dislikeImg.src = "/media/orange_downvote.png"; // Activate dislike
+        likeButton.src = "/media/upvote.png"; // Reset like
+    } else {
+        dislikeImg.src = "/media/downvote.png"; // Deactivate dislike
+    }
+}
+*/
+
+function liked(button) {
+    let postBox = button.closest(".comment_box") || button.closest(".post_box") || button.closest(".posts");
+
+    let likeImg = button.querySelector("img");
+    let dislikeButton = postBox.querySelector(".post_interactions button img[src*='downvote.png'], .post-actions .interactions button img[src*='downvote.png']"); // Find corresponding dislike
+
+    console.log("Like clicked!"); // Debugging log
+
+    if (likeImg.src.includes("upvote.png")) {
+        likeImg.src = "/media/orange_upvote.png"; // Activate like
+        if (dislikeButton) dislikeButton.src = "/media/downvote.png"; // Reset dislike
+    } else {
+        likeImg.src = "/media/upvote.png"; // Deactivate like
+    }
+}
+
+function disliked(button) {
+    let postBox = button.closest(".comment_box") || button.closest(".post_box") || button.closest(".posts");
+
+    let dislikeImg = button.querySelector("img");
+    let likeButton = postBox.querySelector(".post_interactions button img[src*='upvote.png'], .post-actions .interactions button img[src*='upvote.png']"); // Find corresponding like
+
+    console.log("Dislike clicked!"); // Debugging log
+
+    if (dislikeImg.src.includes("downvote.png")) {
+        dislikeImg.src = "/media/orange_downvote.png"; // Activate dislike
+        if (likeButton) likeButton.src = "/media/upvote.png"; // Reset like
+    } else {
+        dislikeImg.src = "/media/downvote.png"; // Deactivate dislike
+    }
+}
 
 function addPopUp(openButton, closeButtonId, popUpId) {
     const popUp = document.getElementById(popUpId);
