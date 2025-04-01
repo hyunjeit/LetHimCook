@@ -35,9 +35,9 @@
                         <img src="../media/home.png">
                         <p>Home</p>
                     </div></a> 
-                    <a href="#"><div class="container">
+                    <a href="/about"><div class="container">
                         <img src="../media/settings.png">
-                        <p>Settings</p>
+                        <p>About</p>
                     </div></a>
                     <a href="/"><div id="post" class="container">
                         <img src="../media/add.png">
@@ -63,7 +63,7 @@
                         <a href="/open_post_logged_out?postId={{this._id}}">
                         <div id="post_header" class="post_header">{{this.header}}</div>
                         
-                        <div id="post_text" class="post_text">{{{this.content}}}</div>
+                        <div id="post_text" class="post_text">{{{highlightHashtags this.content}}}</div>
                         <div class="post_photo">
                             {{#if this.img}}
                                 <img src="/media/{{this.img}}" alt="{{this.img}}">

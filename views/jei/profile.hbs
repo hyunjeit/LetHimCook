@@ -34,10 +34,10 @@
                         <img src="../media/home.png">
                         <p>Home</p>
                     </div></a>
-                    <div class="container">
+                    <a href="/about"><div class="container">
                         <img src="../media/settings.png">
-                        <p>Settings</p>
-                    </div>
+                        <p>About</p>
+                    </div></a>
                     <a href="/make_post"><div id="post" class="container">
                         <img src="../media/add.png">
                         <p>Post</p>
@@ -70,7 +70,7 @@
                         {{#if this.edited}}
                             <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
                         {{/if}}
-                        <div class="post_text">{{{this.content}}}</div>
+                        <div id="post_text" class="post_text">{{{highlightHashtags this.content}}}</div>
                         {{#if this.img}}
                             <div class="post_photo">
                                 <img src="/media/{{this.img}}" alt="{{this.img}}">

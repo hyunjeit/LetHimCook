@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>About</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="james/landingStyle.css">
+        <link rel="stylesheet" href="main_style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Julius+Sans+One&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div id="content">
+            <!-- Keep the left frame as is -->
+            <div id="leftFrame">
+            </div>
+            
+            <!-- Keep the existing separator -->
+            <div class="border, light-orange"></div>
+            
+            <!-- Modify ONLY the right frame to become "About" -->
+            <div id="rightFrame">
+                <div id="aboutContainer">
+                    <div id="aboutTitle" class="julius-sans-one-regular">About Pots & Posts</div>
+
+                    <div id="aboutText" class="inter-100">
+                        <p>
+                            Pots & Posts is a forum website focusing on food, where flavors meet stories! 
+                            Here, you can share your culinary adventures, discuss your favorite kitchen 
+                            tips, and explore mouthwatering recipes from around the globe. Whether 
+                            you’re a seasoned chef or an enthusiastic beginner, we invite you to join our 
+                            community and savor the art of cooking and storytelling.
+                        </p>
+                    </div>
+
+                    <div id="packagesUsed" class="inter-100">
+                        <h2>npm Packages Used</h2>
+                        <ul>
+                            <li>express</li>
+                            <li>express-session</li>
+                            <li>cookie-parser</li>
+                            <li>express-fileupload</li>
+                            <li>bcrypt</li>
+                            <li>body-parser</li>
+                            <li>mongoose</li>
+                            <li>hbs</li>
+                        </ul>
+                    </div>
+
+                    <div id="libraryUsed" class="inter-100">
+                        <h2>External Library Used</h2>
+                        <p>Google Fonts</p>
+                    </div>
+
+                    <button id="backToMainButton" class="inter-100 about" onclick="location.href='/main_forum'">
+                        Go Back to Main Forum
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

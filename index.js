@@ -598,6 +598,11 @@ app.get('/main_forum_unauthenticated', async (req, res) => {
 app.get('/register', (req, res) => {
     res.render('james/create_account_page.hbs');
 })
+
+app.get('/about', (req, res) => {
+    res.render('jei/about.hbs');
+});
+
 /* end of page directing */
 
 // login route

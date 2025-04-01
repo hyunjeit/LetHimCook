@@ -335,3 +335,67 @@ a:hover{
     left: 140px;
     bottom: 18px;
 }
+
+a.hashtag {
+    color: #0000EE !important;
+    text-decoration: none !important;
+}
+
+a.hashtag:visited {
+    color: #0000EE !important;
+}
+
+a.hashtag:hover {
+    color: #66B2FF !important;
+    text-decoration: underline !important;
+}
+
+
+/* For the About page */
+#aboutTitle {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+#aboutText p {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+
+#packagesUsed h2,
+#libraryUsed h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+#packagesUsed ul {
+    margin-left: 1.5rem;
+}
+
+#backToMainButton {
+    cursor: pointer;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    margin-top: 2rem;
+}
+
+#rightFrame {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    text-align: left;        
+    padding: 2rem;
+    height: 100vh;           
+}
+
+#aboutContainer {
+    max-width: 800px;
+    width: 100%;
+    margin-left: 50px;
+}
+
+#aboutContainer > div, #aboutContainer > button {
+    margin-bottom: 1.5rem;
+}
