@@ -21,4 +21,3 @@ Furthermore, it is also possible to browse the forum while logged-out, though th
 
 Once logged in, a user can then: browse through posts; open posts (which will show comments under it, if any); create, edit, and delete their own posts and comments; view profiles; edit their own profile as well as their picture; and search for keywords and tags.
 
-https://github.com/expressjs/session/issues/556
