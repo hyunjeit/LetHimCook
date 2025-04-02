@@ -57,7 +57,7 @@
                             <img src="profilePics/{{mainComment.authorID}}.jpg" class="post_profile_pic">
                             <span class="post_username">{{mainComment.author}} | {{mainComment.date}}</span>
                         </div></a>
-                        <div class="post_text">{{{mainComment.content}}}</div>
+                        <div class="post_text">{{{highlightHashtags mainComment.content}}}</div>
                         <div class="post_interactions">
                             
                             <button class="btn" id="comment2" onclick="addPopUp(this, 'close_comment_popUp', 'comment_popUp')">
@@ -97,7 +97,7 @@
                         </div></a>
                         
                         <a href="/nested_comment_logged_in?mainCommentId={{this._id}}"> 
-                        <div class="post_text">{{{this.content}}}</div>
+                        <div class="post_text">{{{highlightHashtags this.content}}}</div>
                         </a>
 
                         <div class="post_interactions">

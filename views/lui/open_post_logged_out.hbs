@@ -58,7 +58,7 @@
                     {{#if post.edited}}
                         <div id="post_edit_indicator" class="post_edit_indicator">edited</div>
                     {{/if}}
-                    <div id="post_text" class="post_text">{{{post.content}}}</div>
+                    <div id="post_text" class="post_text">{{{highlightHashtags post.content}}}</div>
                     {{#if post.img}}
                         <div class="post_photo">
                             <img src="/media/{{post.img}}" alt="{{post.img}}">
@@ -91,7 +91,7 @@
                         <div class="post_edit_indicator"></div>
                         
                         <a href="/nested_comment_logged_out?mainCommentId={{this._id}}"> 
-                        <div class="post_text">{{{this.content}}}</div>
+                        <div class="post_text">{{{highlightHashtags this.content}}}</div>
                         </a>
 
                         <div class="post_interactions">
